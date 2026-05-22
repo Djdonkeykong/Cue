@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct OnboardingWelcomeView: View {
+struct WelcomeView: View {
     let onContinue: () -> Void
     var onSignIn: (() -> Void)? = nil
 

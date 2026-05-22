@@ -18,7 +18,7 @@ struct OnboardingRootView: View {
             Group {
                 switch step {
                 case .welcome:
-                    OnboardingWelcomeView(
+                    WelcomeView(
                         onContinue: { navigate(to: .painPoint) },
                         onSignIn: { navigate(to: .signIn) }
                     )
