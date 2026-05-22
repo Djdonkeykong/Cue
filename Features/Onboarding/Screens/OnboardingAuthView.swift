@@ -1,12 +1,12 @@
+import AuthenticationServices
 import SwiftUI
 
-// Sign-in screen for returning users ("Welcome back").
-struct OnboardingSignInView: View {
+// Sign-up screen shown at the end of the onboarding flow (new users).
+struct OnboardingAuthView: View {
     @EnvironmentObject private var authManager: AuthManager
     var onBack: (() -> Void)? = nil
-    var onSignUp: (() -> Void)? = nil
 
-    @State private var showEmailSignIn = false
+    @State private var showEmailSignUp = false
     @State private var errorMessage: String? = nil
     @State private var loadingProvider: AuthProvider? = nil
 
@@ -14,62 +14,58 @@ struct OnboardingSignInView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            VStack(spacing: 0) {
-                Spacer()
-
-                // Illustration placeholder
-                Color.clear
-                    .frame(width: 320, height: 320)
-                    .frame(maxWidth: .infinity)
-
-                Spacer().frame(height: 36)
-
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Welcome back")
+                    // Illustration placeholder
+                    Color.clear
+                        .frame(height: 260)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 36)
+                        .padding(.bottom, 12)
+
+                    Text("Save your progress")
                         .font(.cue(.heading1))
                         .foregroundStyle(SkinTheme.primaryText)
                         .padding(.bottom, 10)
 
-                    Text("Sign in to your account to pick up right where you left off.")
+                    Text("Create an account to sync your data across devices and never lose your progress.")
                         .font(.skin(.body))
                         .foregroundStyle(SkinTheme.secondaryText)
                         .lineSpacing(3)
+                        .padding(.bottom, 8)
 
                     if let error = errorMessage {
                         Text(error)
                             .font(.skin(.caption))
                             .foregroundStyle(SkinTheme.dangerColor)
-                            .padding(.top, 8)
+                            .padding(.top, 6)
                     }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 24)
 
-                Spacer()
-
-                VStack(spacing: 12) {
-                    appleButton
-                    googleButton
-                    emailButton
-
-                    HStack(spacing: 4) {
-                        Text("Don't have an account?")
-                            .foregroundStyle(SkinTheme.secondaryText)
-                        Button("Sign up") {
-                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                            onSignUp?()
-                        }
-                        .foregroundStyle(SkinTheme.primaryDeep)
-                        .fontWeight(.semibold)
-                    }
-                    .font(.skin(.subheadline))
-                    .padding(.top, 16)
+                    authButtons
+                        .padding(.top, 32)
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 40)
-                .padding(.top, 16)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentMargins(.top, 16, for: .scrollContent)
+            .contentMargins(.bottom, 80, for: .scrollContent)
+            .scrollBounceBehavior(.always)
+            .scrollIndicators(.hidden)
+            .toolbar(.hidden, for: .navigationBar)
+
+            // Fade the top edge into the background
+            LinearGradient(
+                stops: [
+                    .init(color: SkinTheme.background, location: 0),
+                    .init(color: SkinTheme.background, location: 0.30),
+                    .init(color: SkinTheme.background.opacity(0), location: 1)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 120)
+            .frame(maxWidth: .infinity)
+            .ignoresSafeArea(edges: .top)
+            .allowsHitTesting(false)
 
             if let onBack {
                 HStack {
@@ -81,13 +77,23 @@ struct OnboardingSignInView: View {
             }
         }
         .background(SkinTheme.background.ignoresSafeArea())
-        .toolbar(.hidden, for: .navigationBar)
-        .sheet(isPresented: $showEmailSignIn) {
-            EmailAuthView(isSignIn: true)
+        .sheet(isPresented: $showEmailSignUp) {
+            EmailAuthView(isSignIn: false)
                 .environmentObject(authManager)
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(26)
+        }
+    }
+
+    // MARK: - Buttons
+
+    private var authButtons: some View {
+        VStack(spacing: 12) {
+            appleButton
+            googleButton
+            divider
+            emailButton
         }
     }
 
@@ -152,20 +158,36 @@ struct OnboardingSignInView: View {
         .disabled(isAnyLoading)
     }
 
+    private var divider: some View {
+        HStack(spacing: 12) {
+            Rectangle().fill(Color.primary.opacity(0.12)).frame(height: 1)
+            Text("or").font(.skin(.caption)).foregroundStyle(SkinTheme.secondaryText)
+            Rectangle().fill(Color.primary.opacity(0.12)).frame(height: 1)
+        }
+    }
+
     private var emailButton: some View {
         Button {
-            showEmailSignIn = true
+            showEmailSignUp = true
         } label: {
-            Text("Continue with Email")
-                .font(.skin(.body, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .frame(height: 56)
-                .background(SkinTheme.primaryDeep)
-                .clipShape(Capsule())
+            HStack(spacing: 10) {
+                if loadingProvider == .email {
+                    ProgressView().tint(.white)
+                } else {
+                    Text("Use email instead")
+                        .font(.skin(.body, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .background(SkinTheme.primaryDeep)
+            .clipShape(Capsule())
         }
         .disabled(isAnyLoading)
     }
+
+    // MARK: - Actions
 
     private func signInWithGoogle() {
         errorMessage = nil
@@ -200,17 +222,3 @@ struct OnboardingSignInView: View {
     }
 }
 
-// MARK: - Shared back button (used in both auth screens)
-
-struct BackButton: View {
-    let action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(SkinTheme.primaryText)
-                .frame(width: 38, height: 38)
-                .background(SkinTheme.surface, in: Circle())
-        }
-    }
-}

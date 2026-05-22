@@ -7,7 +7,7 @@ struct AppRootView: View {
 
     var body: some View {
         Group {
-            if authManager.isLoading {
+            if !authManager.isReady {
                 SplashView()
             } else if !authManager.isAuthenticated {
                 OnboardingRootView()
