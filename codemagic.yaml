@@ -66,6 +66,7 @@ workflows:
 
       - name: Build and archive
         script: |
+          set -o pipefail
           xcodebuild archive \
             -scheme "$XCODE_SCHEME" \
             -project Cue.xcodeproj \
