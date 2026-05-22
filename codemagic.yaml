@@ -66,7 +66,7 @@ workflows:
           set -o pipefail
           PROFILE_PATH=$(find "$HOME/Library/MobileDevice/Provisioning Profiles" -name "*.mobileprovision" -maxdepth 1 | head -1)
           echo "Profile path: $PROFILE_PATH"
-          PROFILE_UUID=$(security cms -D -i "$PROFILE_PATH" | python3 -c "import sys,plistlib; print(plistlib.load(sys.stdin.buffer)['UUID'])")
+          PROFILE_UUID=$(security cms -D -i "$PROFILE_PATH" | python3 -c "import sys,plistlib; print(plistlib.loads(sys.stdin.buffer.read())['UUID'])")
           echo "Profile UUID: $PROFILE_UUID"
           echo "$PROFILE_UUID" > /tmp/.cue_profile_uuid
           xcodebuild archive \
