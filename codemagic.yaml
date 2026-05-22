@@ -87,11 +87,8 @@ workflows:
           <dict>
               <key>method</key>
               <string>app-store-connect</string>
-              <key>provisioningProfiles</key>
-              <dict>
-                  <key>com.cueapplication.cueapplication</key>
-                  <string>cue_profile</string>
-              </dict>
+              <key>signingStyle</key>
+              <string>manual</string>
           </dict>
           </plist>
           PLIST
