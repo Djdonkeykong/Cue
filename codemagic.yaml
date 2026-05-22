@@ -1,0 +1,106 @@
+workflows:
+  ios-testflight:
+    name: iOS TestFlight
+    max_build_duration: 90
+    instance_type: mac_mini_m2
+
+    integrations:
+      app_store_connect: Codemagic_ASC_Key   # Navn pa integrasjonen i Codemagic dashboard
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.cueapplication.cueapplication  # Bytt til din bundle ID
+      vars:
+        BUNDLE_ID: com.cueapplication.cueapplication           # Bytt til din bundle ID
+        XCODE_SCHEME: Cue
+      # Sett disse som hemmelige env-variabler i Codemagic dashboard:
+      # GOOGLE_REVERSED_CLIENT_ID  -> REVERSED_CLIENT_ID fra GoogleService-Info.plist
+      #                               (format: com.googleusercontent.apps.XXXXXXX)
+      # GOOGLE_SERVICE_INFO_PLIST  -> base64-kodet innhold av GoogleService-Info.plist
+      #                               Generer med: base64 -i GoogleService-Info.plist | pbcopy
+
+    scripts:
+      - name: Install xcodegen
+        script: brew install xcodegen
+
+      - name: Place GoogleService-Info.plist
+        script: |
+          echo "$GOOGLE_SERVICE_INFO_PLIST" | base64 --decode > App/GoogleService-Info.plist
+
+      - name: Generate placeholder app icon
+        script: |
+          python3 - <<'PYEOF'
+          import struct, zlib, os
+          def make_png(w, h, r, g, b):
+              def chunk(tag, data):
+                  crc = zlib.crc32(tag + data) & 0xffffffff
+                  return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', crc)
+              ihdr = struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0)
+              raw = b''.join(b'\x00' + bytes([r, g, b] * w) for _ in range(h))
+              return (b'\x89PNG\r\n\x1a\n'
+                      + chunk(b'IHDR', ihdr)
+                      + chunk(b'IDAT', zlib.compress(raw))
+                      + chunk(b'IEND', b''))
+          os.makedirs('Assets.xcassets/AppIcon.appiconset', exist_ok=True)
+          with open('Assets.xcassets/AppIcon.appiconset/AppIcon.png', 'wb') as f:
+              f.write(make_png(1024, 1024, 196, 132, 90))
+          print('Icon generated')
+          PYEOF
+
+      - name: Generate Xcode project
+        script: xcodegen generate --spec project.yml
+
+      - name: Set up keychain
+        script: keychain initialize
+
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+
+      - name: Apply signing profiles
+        script: xcode-project use-profiles
+
+      - name: Resolve SPM packages
+        script: |
+          xcodebuild -resolvePackageDependencies \
+            -scheme "$XCODE_SCHEME" \
+            -project Cue.xcodeproj \
+            -clonedSourcePackagesDirPath .spm-cache
+
+      - name: Build and archive
+        script: |
+          xcodebuild archive \
+            -scheme "$XCODE_SCHEME" \
+            -project Cue.xcodeproj \
+            -configuration Release \
+            -archivePath "$CM_BUILD_DIR/Cue.xcarchive" \
+            -destination "generic/platform=iOS" \
+            -clonedSourcePackagesDirPath .spm-cache \
+            GOOGLE_REVERSED_CLIENT_ID="$GOOGLE_REVERSED_CLIENT_ID" \
+            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            | xcpretty
+
+      - name: Export IPA
+        script: |
+          EXPORT_PLIST=$(xcode-project export-options-plist)
+          xcodebuild -exportArchive \
+            -archivePath "$CM_BUILD_DIR/Cue.xcarchive" \
+            -exportPath "$CM_BUILD_DIR/export" \
+            -exportOptionsPlist "$EXPORT_PLIST"
+
+    artifacts:
+      - $CM_BUILD_DIR/export/*.ipa
+      - $CM_BUILD_DIR/**/*.xcarchive
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - Internal Testers
