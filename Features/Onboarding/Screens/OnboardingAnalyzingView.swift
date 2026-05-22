@@ -42,7 +42,7 @@ struct OnboardingAnalyzingView: View {
                             .foregroundStyle(SkinTheme.accent)
                             .contentTransition(.numericText())
                         Text("fullfort")
-                            .font(.skin(.caption1))
+                            .font(.skin(.caption))
                             .foregroundStyle(SkinTheme.secondaryText)
                     }
                 }

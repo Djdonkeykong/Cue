@@ -63,7 +63,7 @@ struct OnboardingSignInView: View {
                 .padding(.horizontal, 24)
 
                 Text("Ved a fortsette godtar du var personvernpolicy og brukervilkar.")
-                    .font(.skin(.caption1))
+                    .font(.skin(.caption))
                     .foregroundStyle(SkinTheme.tertiaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 36)

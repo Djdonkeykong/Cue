@@ -109,7 +109,7 @@ private struct TestimonialCard: View {
                 }
                 Spacer()
                 Text(testimonial.ageLabel)
-                    .font(.skin(.caption1))
+                    .font(.skin(.caption))
                     .foregroundStyle(SkinTheme.tertiaryText)
             }
             Text(testimonial.text)
