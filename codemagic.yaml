@@ -76,7 +76,6 @@ workflows:
             -archivePath "$CM_BUILD_DIR/Cue.xcarchive" \
             -destination "generic/platform=iOS" \
             -clonedSourcePackagesDirPath .spm-cache \
-            GOOGLE_REVERSED_CLIENT_ID="$GOOGLE_REVERSED_CLIENT_ID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
             PROVISIONING_PROFILE="$PROFILE_UUID" \
             | xcpretty

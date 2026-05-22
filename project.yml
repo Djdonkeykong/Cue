@@ -40,11 +40,12 @@ targets:
         NSPhotoLibraryUsageDescription: "Cue trenger tilgang til bilder for a analysere ingredienser"
         CFBundleURLTypes:
           - CFBundleURLSchemes:
-              - "$(GOOGLE_REVERSED_CLIENT_ID)"
+              - "com.googleusercontent.apps.732726178398-1uvselk60cjjsd8md0n48stqe0t3apmu"
         UIBackgroundModes:
           - remote-notification
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        UIRequiresFullScreen: true
         UIApplicationSupportsIndirectInputEvents: true
         ITSAppUsesNonExemptEncryption: false
     entitlements:
@@ -54,9 +55,9 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.cueapplication.cueapplication
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "iPhone Distribution"
+        TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_FILE: Cue-Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        GOOGLE_REVERSED_CLIENT_ID: ""
     dependencies:
       - package: Supabase
         product: Supabase
