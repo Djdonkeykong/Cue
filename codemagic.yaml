@@ -54,9 +54,6 @@ workflows:
       - name: Add certificates to keychain
         script: keychain add-certificates
 
-      - name: Apply signing profiles
-        script: xcode-project use-profiles
-
       - name: Resolve SPM packages
         script: |
           xcodebuild -resolvePackageDependencies \
@@ -67,6 +64,11 @@ workflows:
       - name: Build and archive
         script: |
           set -o pipefail
+          PROFILE_PATH=$(find "$HOME/Library/MobileDevice/Provisioning Profiles" -name "*.mobileprovision" -maxdepth 1 | head -1)
+          echo "Profile path: $PROFILE_PATH"
+          PROFILE_UUID=$(security cms -D -i "$PROFILE_PATH" | python3 -c "import sys,plistlib; print(plistlib.load(sys.stdin.buffer)['UUID'])")
+          echo "Profile UUID: $PROFILE_UUID"
+          echo "$PROFILE_UUID" > /tmp/.cue_profile_uuid
           xcodebuild archive \
             -scheme "$XCODE_SCHEME" \
             -project Cue.xcodeproj \
@@ -76,22 +78,24 @@ workflows:
             -clonedSourcePackagesDirPath .spm-cache \
             GOOGLE_REVERSED_CLIENT_ID="$GOOGLE_REVERSED_CLIENT_ID" \
             PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            PROVISIONING_PROFILE="$PROFILE_UUID" \
             | xcpretty
 
       - name: Export IPA
         script: |
-          cat > /tmp/ExportOptions.plist <<'PLIST'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>app-store-connect</string>
-              <key>signingStyle</key>
-              <string>manual</string>
-          </dict>
-          </plist>
-          PLIST
+          PROFILE_UUID=$(cat /tmp/.cue_profile_uuid)
+          echo "Exporting with profile UUID: $PROFILE_UUID"
+          python3 -c "
+import plistlib, sys
+plist = {
+    'method': 'app-store-connect',
+    'signingStyle': 'manual',
+    'provisioningProfiles': {'com.cueapplication.cueapplication': sys.argv[1]}
+}
+with open('/tmp/ExportOptions.plist', 'wb') as f:
+    plistlib.dump(plist, f)
+print('ExportOptions.plist written')
+" "$PROFILE_UUID"
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/Cue.xcarchive" \
             -exportPath "$CM_BUILD_DIR/export" \
