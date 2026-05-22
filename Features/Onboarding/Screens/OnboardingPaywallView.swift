@@ -47,10 +47,10 @@ struct OnboardingPaywallView: View {
     @ViewBuilder
     private var header: some View {
         VStack(spacing: 8) {
-            Text("Las opp Cue Pro")
+            Text("Unlock Cue Pro")
                 .font(.skin(.title2, weight: .bold))
                 .foregroundStyle(SkinTheme.primaryText)
-            Text("Fa tilgang til alle resultater og personlige verktoy")
+            Text("Get access to all results and personalized tools")
                 .font(.skin(.callout))
                 .foregroundStyle(SkinTheme.secondaryText)
                 .multilineTextAlignment(.center)
@@ -61,11 +61,11 @@ struct OnboardingPaywallView: View {
     @ViewBuilder
     private var featureList: some View {
         VStack(spacing: 10) {
-            featureRow(icon: "lock.open.fill",            text: "Alle laaste resultater og analyser")
-            featureRow(icon: "chart.line.uptrend.xyaxis", text: "Ubegrenset trigger-sporing")
-            featureRow(icon: "barcode.viewfinder",        text: "AI-produktskanning uten begrensninger")
-            featureRow(icon: "brain.head.profile",        text: "Personlige AI-anbefalinger")
-            featureRow(icon: "bell.badge.fill",           text: "Smartvarsler om hudens tilstand")
+            featureRow(icon: "lock.open.fill",            text: "All locked results and analyses")
+            featureRow(icon: "chart.line.uptrend.xyaxis", text: "Unlimited trigger tracking")
+            featureRow(icon: "barcode.viewfinder",        text: "AI product scanning without limits")
+            featureRow(icon: "brain.head.profile",        text: "Personalized AI recommendations")
+            featureRow(icon: "bell.badge.fill",           text: "Smart alerts about your skin condition")
         }
         .padding(.horizontal, 24)
     }
@@ -96,11 +96,11 @@ struct OnboardingPaywallView: View {
             .disabled(selectedPackage == nil || isPurchasing)
             .padding(.horizontal, 24)
 
-            Button("Fortsett gratis", action: onComplete)
+            Button("Continue for free", action: onComplete)
                 .font(.skin(.callout))
                 .foregroundStyle(SkinTheme.secondaryText)
 
-            Button("Gjenopprett kjoep") { restore() }
+            Button("Restore purchases") { restore() }
                 .font(.skin(.footnote))
                 .foregroundStyle(SkinTheme.tertiaryText)
                 .disabled(isRestoring)
@@ -109,7 +109,7 @@ struct OnboardingPaywallView: View {
 
     @ViewBuilder
     private var legalFooter: some View {
-        Text("Abonnementet fornyes automatisk. Avbryt nar som helst i App Store-innstillinger. Ingen refusjon for paganvaerende periode.")
+        Text("Subscription renews automatically. Cancel anytime in App Store settings. No refund for the current period.")
             .font(.skin(.caption2))
             .foregroundStyle(SkinTheme.tertiaryText)
             .multilineTextAlignment(.center)
@@ -150,12 +150,12 @@ struct OnboardingPaywallView: View {
     }
 
     private var purchaseButtonTitle: String {
-        guard let pkg = selectedPackage else { return "Velg abonnement" }
+        guard let pkg = selectedPackage else { return "Choose a plan" }
         switch pkg.packageType {
-        case .weekly:  return "Start ukentlig - " + pkg.storeProduct.localizedPriceString
-        case .monthly: return "Start manedlig - " + pkg.storeProduct.localizedPriceString
-        case .annual:  return "Start arlig - " + pkg.storeProduct.localizedPriceString
-        default:       return "Start abonnement"
+        case .weekly:  return "Start weekly — " + pkg.storeProduct.localizedPriceString
+        case .monthly: return "Start monthly — " + pkg.storeProduct.localizedPriceString
+        case .annual:  return "Start yearly — " + pkg.storeProduct.localizedPriceString
+        default:       return "Start subscription"
         }
     }
 
@@ -163,7 +163,7 @@ struct OnboardingPaywallView: View {
         do {
             offerings = try await Purchases.shared.offerings()
         } catch {
-            errorMessage = "Kunne ikke laste abonnementer. Sjekk internett og proev igjen."
+            errorMessage = "Could not load plans. Check your connection and try again."
         }
     }
 
@@ -176,7 +176,7 @@ struct OnboardingPaywallView: View {
                 let result = try await Purchases.shared.purchase(package: pkg)
                 if !result.userCancelled { onComplete() }
             } catch {
-                errorMessage = "Kjoep mislyktes. Proev igjen."
+                errorMessage = "Purchase failed. Please try again."
             }
             isPurchasing = false
         }
@@ -189,12 +189,12 @@ struct OnboardingPaywallView: View {
             do {
                 let info = try await Purchases.shared.restorePurchases()
                 if info.entitlements.active.isEmpty {
-                    errorMessage = "Ingen aktive abonnementer funnet."
+                    errorMessage = "No active subscriptions found."
                 } else {
                     onComplete()
                 }
             } catch {
-                errorMessage = "Gjenoppretting mislyktes."
+                errorMessage = "Restore failed. Please try again."
             }
             isRestoring = false
         }
@@ -210,9 +210,9 @@ private struct PaywallPackageCard: View {
 
     private var periodLabel: String {
         switch package.packageType {
-        case .weekly:  return "Ukentlig"
-        case .monthly: return "Manedlig"
-        case .annual:  return "Arlig"
+        case .weekly:  return "Weekly"
+        case .monthly: return "Monthly"
+        case .annual:  return "Yearly"
         default:       return package.identifier
         }
     }
@@ -228,7 +228,7 @@ private struct PaywallPackageCard: View {
                             .font(.skin(.callout, weight: .semibold))
                             .foregroundStyle(isSelected ? .white : SkinTheme.primaryText)
                         if isBestValue {
-                            Text("Beste verdi")
+                            Text("Best value")
                                 .font(.skin(.caption2, weight: .bold))
                                 .foregroundStyle(isSelected ? .white : SkinTheme.accent)
                                 .padding(.horizontal, 6)

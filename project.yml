@@ -37,8 +37,8 @@ targets:
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         UILaunchScreen:
           UIColorName: ""
-        NSCameraUsageDescription: "Cue bruker kameraet til a skanne ingredienslister"
-        NSPhotoLibraryUsageDescription: "Cue trenger tilgang til bilder for a analysere ingredienser"
+        NSCameraUsageDescription: "Cue uses the camera to scan ingredient lists"
+        NSPhotoLibraryUsageDescription: "Cue needs access to photos to analyze ingredients"
         CFBundleURLTypes:
           - CFBundleURLSchemes:
               - "com.googleusercontent.apps.732726178398-1uvselk60cjjsd8md0n48stqe0t3apmu"

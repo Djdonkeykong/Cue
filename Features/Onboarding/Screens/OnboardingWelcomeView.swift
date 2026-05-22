@@ -22,7 +22,7 @@ struct OnboardingWelcomeView: View {
                     Text("Cue")
                         .font(.cue(.heading1))
                         .foregroundStyle(SkinTheme.primaryText)
-                    Text("Din hud, endelig forstatt.")
+                    Text("Your skin, finally understood.")
                         .font(.skin(.title3))
                         .foregroundStyle(SkinTheme.secondaryText)
                         .multilineTextAlignment(.center)
@@ -32,13 +32,13 @@ struct OnboardingWelcomeView: View {
             Spacer()
 
             VStack(spacing: 20) {
-                Text("Finn ut hva som faktisk trigger huden din - og hva du kan gjore med det.")
+                Text("Find out what's actually triggering your skin — and what to do about it.")
                     .font(.skin(.callout))
                     .foregroundStyle(SkinTheme.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 40)
 
-                Button("Kom i gang", action: onContinue)
+                Button("Get started", action: onContinue)
                     .font(.skin(.body, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)

@@ -6,7 +6,7 @@ struct SkinProfile: Identifiable, Codable {
     var skinType: SkinType
     var skinConcerns: [SkinConcern]
     var knownAllergens: [String]
-    var currentProducts: [String]   // product names in active routine
+    var currentProducts: [String]
     var createdAt: Date
     var updatedAt: Date
 
@@ -40,21 +40,21 @@ enum SkinType: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .oily:        return "Fetthud"
-        case .dry:         return "Torr hud"
-        case .combination: return "Kombinasjonshud"
-        case .normal:      return "Normal hud"
-        case .sensitive:   return "Sensitiv hud"
+        case .oily:        return "Oily"
+        case .dry:         return "Dry"
+        case .combination: return "Combination"
+        case .normal:      return "Normal"
+        case .sensitive:   return "Sensitive"
         }
     }
 
     var description: String {
         switch self {
-        case .oily:        return "Huden produserer mye talg og skinner lett"
-        case .dry:         return "Huden foles stram og kan flasse"
-        case .combination: return "Fet T-sone, torrere kinn"
-        case .normal:      return "Balansert hud uten store problemer"
-        case .sensitive:   return "Reagerer lett pa produkter og miljopavirkning"
+        case .oily:        return "Produces a lot of sebum, tends to shine"
+        case .dry:         return "Feels tight, may flake"
+        case .combination: return "Oily T-zone, drier cheeks"
+        case .normal:      return "Balanced skin without major issues"
+        case .sensitive:   return "Reacts easily to products and environment"
         }
     }
 
@@ -70,25 +70,25 @@ enum SkinType: String, Codable, CaseIterable {
 }
 
 enum SkinConcern: String, Codable, CaseIterable {
-    case acne            = "acne"
-    case blackheads      = "blackheads"
-    case largePores      = "large_pores"
-    case redness         = "redness"
+    case acne              = "acne"
+    case blackheads        = "blackheads"
+    case largePores        = "large_pores"
+    case redness           = "redness"
     case hyperpigmentation = "hyperpigmentation"
-    case wrinkles        = "wrinkles"
-    case dullness        = "dullness"
-    case sensitivity     = "sensitivity"
+    case wrinkles          = "wrinkles"
+    case dullness          = "dullness"
+    case sensitivity       = "sensitivity"
 
     var displayName: String {
         switch self {
-        case .acne:              return "Akne"
-        case .blackheads:        return "Pormasker"
-        case .largePores:        return "Store porer"
-        case .redness:           return "Rodnhet"
-        case .hyperpigmentation: return "Misfarginger"
-        case .wrinkles:          return "Rynker"
-        case .dullness:          return "Dull hud"
-        case .sensitivity:       return "Sensitivitet"
+        case .acne:              return "Acne"
+        case .blackheads:        return "Blackheads"
+        case .largePores:        return "Large pores"
+        case .redness:           return "Redness"
+        case .hyperpigmentation: return "Hyperpigmentation"
+        case .wrinkles:          return "Wrinkles"
+        case .dullness:          return "Dull skin"
+        case .sensitivity:       return "Sensitivity"
         }
     }
 

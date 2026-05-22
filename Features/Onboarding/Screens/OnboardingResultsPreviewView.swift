@@ -8,10 +8,10 @@ struct OnboardingResultsPreviewView: View {
         ScrollView {
             VStack(spacing: 24) {
                 VStack(spacing: 6) {
-                    Text("Profilen din er klar")
+                    Text("Your profile is ready")
                         .font(.skin(.title2, weight: .bold))
                         .foregroundStyle(SkinTheme.primaryText)
-                    Text("Vi har analysert svarene dine og funnet noen viktige monster.")
+                    Text("We've analyzed your answers and found some important patterns.")
                         .font(.skin(.callout))
                         .foregroundStyle(SkinTheme.secondaryText)
                         .multilineTextAlignment(.center)
@@ -21,42 +21,42 @@ struct OnboardingResultsPreviewView: View {
 
                 VStack(spacing: 12) {
                     ResultStatCard(
-                        title: "Breakout-risiko",
+                        title: "Breakout risk",
                         value: "\(vm.breakoutRiskPercent)%",
-                        detail: "basert pa hudtype og livsstil",
+                        detail: "based on skin type and lifestyle",
                         color: vm.breakoutRiskPercent > 70 ? SkinTheme.dangerColor : SkinTheme.warningColor
                     )
                     ResultStatCard(
-                        title: "Inflammasjonsindeks",
+                        title: "Inflammation index",
                         value: vm.inflammationLabel,
-                        detail: "basert pa alvorlighetsgrad",
+                        detail: "based on severity",
                         color: vm.severity >= 4 ? SkinTheme.dangerColor : SkinTheme.warningColor
                     )
                     ResultStatCard(
-                        title: "Triggere oppdaget",
+                        title: "Triggers detected",
                         value: "\(max(vm.lifestyleFactors.count, 2))",
-                        detail: "potensielle paveirkningsfaktorer",
+                        detail: "potential contributing factors",
                         color: SkinTheme.accent
                     )
                 }
                 .padding(.horizontal, 24)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Laaste innsikter")
+                    Text("Locked insights")
                         .font(.skin(.callout, weight: .semibold))
                         .foregroundStyle(SkinTheme.secondaryText)
                         .padding(.horizontal, 24)
 
                     VStack(spacing: 8) {
-                        lockedRow("Topptriggere for din hud")
-                        lockedRow("Produktkonflikt-analyse")
-                        lockedRow("Personlig 30-dagers plan")
-                        lockedRow("Kostholdsmonster og akne")
+                        lockedRow("Top triggers for your skin")
+                        lockedRow("Product conflict analysis")
+                        lockedRow("Personalized 30-day plan")
+                        lockedRow("Diet patterns and acne")
                     }
                     .padding(.horizontal, 24)
                 }
 
-                Button("Las opp alle resultater", action: onContinue)
+                Button("Unlock all results", action: onContinue)
                     .font(.skin(.body, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)

@@ -5,10 +5,10 @@ enum Gender: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .male:           return "Mann"
-        case .female:         return "Kvinne"
-        case .nonBinary:      return "Ikke-binar"
-        case .preferNotToSay: return "Vil ikke si"
+        case .male:           return "Male"
+        case .female:         return "Female"
+        case .nonBinary:      return "Non-binary"
+        case .preferNotToSay: return "Prefer not to say"
         }
     }
 }
@@ -18,11 +18,11 @@ enum ConcernDuration: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .lessThan3Months:    return "Under 3 maneder"
-        case .threeToSixMonths:   return "3-6 maneder"
-        case .sixMonthsToOneYear: return "6 maneder - 1 ar"
-        case .oneToThreeYears:    return "1-3 ar"
-        case .moreThanThreeYears: return "Mer enn 3 ar"
+        case .lessThan3Months:    return "Less than 3 months"
+        case .threeToSixMonths:   return "3-6 months"
+        case .sixMonthsToOneYear: return "6 months - 1 year"
+        case .oneToThreeYears:    return "1-3 years"
+        case .moreThanThreeYears: return "More than 3 years"
         }
     }
 }
@@ -46,19 +46,19 @@ enum SkincareRoutine: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .none:      return "Ingen rutine"
-        case .basic:     return "Grunnleggende"
-        case .moderate:  return "Moderat"
-        case .extensive: return "Omfattende"
+        case .none:      return "No routine"
+        case .basic:     return "Basic"
+        case .moderate:  return "Moderate"
+        case .extensive: return "Extensive"
         }
     }
 
     var description: String {
         switch self {
-        case .none:      return "Vasker ansiktet av og til"
-        case .basic:     return "Rens og fuktighetskrem"
-        case .moderate:  return "Rens, toner, serum, fuktighetskrem"
-        case .extensive: return "Full rutine med mange steg"
+        case .none:      return "Wash my face occasionally"
+        case .basic:     return "Cleanser and moisturizer"
+        case .moderate:  return "Cleanser, toner, serum, moisturizer"
+        case .extensive: return "Full multi-step routine"
         }
     }
 }
@@ -68,19 +68,19 @@ enum RoutineConsistency: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .never:     return "Sjelden"
-        case .sometimes: return "Av og til"
-        case .often:     return "Ofte"
-        case .daily:     return "Daglig"
+        case .never:     return "Rarely"
+        case .sometimes: return "Sometimes"
+        case .often:     return "Often"
+        case .daily:     return "Daily"
         }
     }
 
     var description: String {
         switch self {
-        case .never:     return "1-2 ganger i uken eller sjeldnere"
-        case .sometimes: return "3-4 ganger i uken"
-        case .often:     return "Nesten hver dag"
-        case .daily:     return "To ganger daglig uten unntak"
+        case .never:     return "1-2 times a week or less"
+        case .sometimes: return "3-4 times a week"
+        case .often:     return "Almost every day"
+        case .daily:     return "Twice daily without exception"
         }
     }
 }
@@ -90,14 +90,14 @@ enum LifestyleFactor: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .poorSleep:     return "Darlig sovn"
-        case .highStress:    return "Hoyt stressniva"
-        case .poorDiet:      return "Usunt kosthold"
-        case .smoking:       return "Royking"
-        case .heavyExercise: return "Intensiv trening"
-        case .sunExposure:   return "Mye sol"
-        case .dairy:         return "Mye meieri"
-        case .sugar:         return "Mye sukker"
+        case .poorSleep:     return "Poor sleep"
+        case .highStress:    return "High stress levels"
+        case .poorDiet:      return "Unhealthy diet"
+        case .smoking:       return "Smoking"
+        case .heavyExercise: return "Intense exercise"
+        case .sunExposure:   return "Lots of sun exposure"
+        case .dairy:         return "High dairy intake"
+        case .sugar:         return "High sugar intake"
         }
     }
 
@@ -120,19 +120,19 @@ enum SensitivityLevel: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .notSensitive: return "Ikke sensitiv"
-        case .somewhat:     return "Litt sensitiv"
-        case .very:         return "Veldig sensitiv"
-        case .extremely:    return "Ekstremt sensitiv"
+        case .notSensitive: return "Not sensitive"
+        case .somewhat:     return "Slightly sensitive"
+        case .very:         return "Very sensitive"
+        case .extremely:    return "Extremely sensitive"
         }
     }
 
     var description: String {
         switch self {
-        case .notSensitive: return "Reagerer sjelden pa produkter"
-        case .somewhat:     return "Noen produkter irriterer huden"
-        case .very:         return "Mange produkter irriterer huden"
-        case .extremely:    return "Nesten alt gir reaksjon"
+        case .notSensitive: return "Rarely reacts to products"
+        case .somewhat:     return "Some products irritate my skin"
+        case .very:         return "Many products irritate my skin"
+        case .extremely:    return "Almost everything causes a reaction"
         }
     }
 }

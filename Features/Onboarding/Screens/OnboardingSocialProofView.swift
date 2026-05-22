@@ -9,18 +9,18 @@ private struct Testimonial {
 private let testimonials: [Testimonial] = [
     .init(
         name: "Marte K.",
-        ageLabel: "24 ar",
-        text: "Etter 3 maneder med Cue vet jeg endelig hva som trigger huden min. Meieri og darlig sovn var syndebukken!"
+        ageLabel: "24",
+        text: "After 3 months with Cue I finally know what triggers my skin. Dairy and poor sleep were the culprits!"
     ),
     .init(
         name: "Jonas A.",
-        ageLabel: "29 ar",
-        text: "Ingrediensskanneren er gull verdt. Fant ut at fuktighetskrem jeg brukte hadde hoyt komedogent innhold."
+        ageLabel: "29",
+        text: "The ingredient scanner is worth its weight in gold. Found out my moisturizer had high comedogenic content."
     ),
     .init(
         name: "Sara L.",
-        ageLabel: "22 ar",
-        text: "Elsker at appen ser sammenheng mellom stress og ubrudd. Na kan jeg faktisk gjore noe med det."
+        ageLabel: "22",
+        text: "Love that the app spots the connection between stress and breakouts. Now I can actually do something about it."
     ),
 ]
 
@@ -31,11 +31,11 @@ struct OnboardingSocialProofView: View {
         ScrollView {
             VStack(spacing: 28) {
                 VStack(spacing: 8) {
-                    Text("Bli med 50 000+ brukere")
+                    Text("Join 50,000+ users")
                         .font(.skin(.title2, weight: .bold))
                         .foregroundStyle(SkinTheme.primaryText)
                         .multilineTextAlignment(.center)
-                    Text("som har funnet ut hva som pavirker huden sin")
+                    Text("who've discovered what's affecting their skin")
                         .font(.skin(.callout))
                         .foregroundStyle(SkinTheme.secondaryText)
                         .multilineTextAlignment(.center)
@@ -51,7 +51,7 @@ struct OnboardingSocialProofView: View {
                     Text("4.8")
                         .font(.skin(.callout, weight: .bold))
                         .foregroundStyle(SkinTheme.primaryText)
-                    Text("(2 300+ anmeldelser)")
+                    Text("(2,300+ reviews)")
                         .font(.skin(.callout))
                         .foregroundStyle(SkinTheme.secondaryText)
                 }
@@ -64,13 +64,13 @@ struct OnboardingSocialProofView: View {
                 .padding(.horizontal, 24)
 
                 VStack(spacing: 10) {
-                    resultRow(icon: "checkmark.circle.fill", text: "Gjennomsnittlig 62% forbedring etter 30 dager")
-                    resultRow(icon: "checkmark.circle.fill", text: "9 av 10 finner sin hoved-trigger innen 2 uker")
-                    resultRow(icon: "checkmark.circle.fill", text: "Anbefalt av over 200 hudleger i Norden")
+                    resultRow(icon: "checkmark.circle.fill", text: "Average 62% improvement after 30 days")
+                    resultRow(icon: "checkmark.circle.fill", text: "9 out of 10 find their main trigger within 2 weeks")
+                    resultRow(icon: "checkmark.circle.fill", text: "Recommended by over 200 dermatologists")
                 }
                 .padding(.horizontal, 24)
 
-                Button("Se resultatene mine", action: onContinue)
+                Button("See my results", action: onContinue)
                     .font(.skin(.body, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -108,7 +108,7 @@ private struct TestimonialCard: View {
                         .foregroundStyle(SkinTheme.warningColor)
                 }
                 Spacer()
-                Text(testimonial.ageLabel)
+                Text("Age \(testimonial.ageLabel)")
                     .font(.skin(.caption))
                     .foregroundStyle(SkinTheme.tertiaryText)
             }

@@ -43,7 +43,7 @@ struct QuizScreen<Content: View>: View {
                 .padding(.bottom, 8)
             }
 
-            Button("Fortsett", action: onContinue)
+            Button("Continue", action: onContinue)
                 .font(.skin(.body, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
@@ -133,7 +133,7 @@ struct QuizGenderView: View {
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(title: "Hvem er du?", onContinue: onContinue) {
+        QuizScreen(title: "Who are you?", onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(Gender.allCases, id: \.self) { gender in
                     QuizOptionCard(title: gender.displayName, isSelected: vm.gender == gender) {
@@ -153,8 +153,8 @@ struct QuizSkinTypeView: View {
 
     var body: some View {
         QuizScreen(
-            title: "Hva er hudtypen din?",
-            subtitle: "Velg det alternativet som passer best.",
+            title: "What's your skin type?",
+            subtitle: "Choose the option that fits best.",
             onContinue: onContinue
         ) {
             VStack(spacing: 10) {
@@ -181,8 +181,8 @@ struct QuizConcernsView: View {
 
     var body: some View {
         QuizScreen(
-            title: "Hvilke hudproblemer har du?",
-            subtitle: "Velg alle som gjelder.",
+            title: "What skin concerns do you have?",
+            subtitle: "Select all that apply.",
             continueEnabled: !vm.concerns.isEmpty,
             onContinue: onContinue
         ) {
@@ -210,15 +210,15 @@ struct QuizSeverityView: View {
     let onContinue: () -> Void
 
     private let options: [(label: String, detail: String, value: Int)] = [
-        ("Mild",    "Sjelden et kvise",                           1),
-        ("Lett",    "Noen jevnlige kviser",                       2),
-        ("Moderat", "Merkbare ubrudd regelmessig",                3),
-        ("Alvorlig","Hyppige og smertefulle ubrudd",              4),
-        ("Svaer",   "Vedvarende, dekker store deler av ansiktet", 5),
+        ("Mild",     "Rarely a breakout",                          1),
+        ("Light",    "A few occasional blemishes",                 2),
+        ("Moderate", "Noticeable breakouts regularly",             3),
+        ("Severe",   "Frequent and painful breakouts",             4),
+        ("Very severe", "Persistent, covering large areas",        5),
     ]
 
     var body: some View {
-        QuizScreen(title: "Hvor alvorlig er hudproblemet?", onContinue: onContinue) {
+        QuizScreen(title: "How severe is the problem?", onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(options, id: \.value) { opt in
                     QuizOptionCard(
@@ -242,7 +242,7 @@ struct QuizDurationView: View {
 
     var body: some View {
         QuizScreen(
-            title: "Hvor lenge har du hatt disse problemene?",
+            title: "How long have you had these concerns?",
             onContinue: onContinue
         ) {
             VStack(spacing: 10) {
@@ -263,7 +263,7 @@ struct QuizAgeView: View {
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(title: "Hva er aldersgruppen din?", onContinue: onContinue) {
+        QuizScreen(title: "What's your age group?", onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(AgeRange.allCases, id: \.self) { age in
                     QuizOptionCard(title: age.displayName, isSelected: vm.ageRange == age) {
@@ -282,7 +282,7 @@ struct QuizRoutineView: View {
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(title: "Hvordan er hudpleierutinen din?", onContinue: onContinue) {
+        QuizScreen(title: "What's your skincare routine like?", onContinue: onContinue) {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(spacing: 10) {
                     ForEach(SkincareRoutine.allCases, id: \.self) { routine in
@@ -297,7 +297,7 @@ struct QuizRoutineView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Hvor konsekvent er du?")
+                    Text("How consistent are you?")
                         .font(.skin(.headline, weight: .semibold))
                         .foregroundStyle(SkinTheme.primaryText)
 
@@ -326,8 +326,8 @@ struct QuizLifestyleView: View {
 
     var body: some View {
         QuizScreen(
-            title: "Hva kjenner du deg igjen i?",
-            subtitle: "Velg alle som gjelder. Vi bruker dette til a finne dine triggere.",
+            title: "What sounds like you?",
+            subtitle: "Select all that apply. We use this to find your triggers.",
             onContinue: onContinue
         ) {
             VStack(spacing: 10) {
@@ -354,15 +354,15 @@ struct QuizGoalView: View {
     let onContinue: () -> Void
 
     private let goals = [
-        "Fa klarere hud",
-        "Forsta hva som trigger akne",
-        "Finne trygge produkter",
-        "Redusere pormasker og store porer",
-        "Bygge en effektiv hudpleierutine",
+        "Get clearer skin",
+        "Understand what triggers my acne",
+        "Find safe products",
+        "Reduce blackheads and large pores",
+        "Build an effective skincare routine",
     ]
 
     var body: some View {
-        QuizScreen(title: "Hva er malet ditt?", subtitle: "Velg det som er viktigst for deg na.", onContinue: onContinue) {
+        QuizScreen(title: "What's your goal?", subtitle: "Choose what matters most to you right now.", onContinue: onContinue) {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(spacing: 10) {
                     ForEach(goals, id: \.self) { goal in
@@ -373,10 +373,10 @@ struct QuizGoalView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Hva heter du? (valgfritt)")
+                    Text("What's your name? (optional)")
                         .font(.skin(.callout, weight: .semibold))
                         .foregroundStyle(SkinTheme.primaryText)
-                    TextField("Fornavnet ditt", text: $vm.displayName)
+                    TextField("Your first name", text: $vm.displayName)
                         .font(.skin(.body))
                         .padding(14)
                         .background(SkinTheme.inputSurface, in: RoundedRectangle(cornerRadius: 12))

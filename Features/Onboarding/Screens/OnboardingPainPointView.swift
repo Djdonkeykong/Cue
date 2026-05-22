@@ -9,18 +9,18 @@ private struct PainPoint {
 private let painPoints: [PainPoint] = [
     .init(
         icon: "doc.questionmark.fill",
-        headline: "Du har proevd alt",
-        body: "Produkter, rutiner, rad fra alle kanter - men ingenting gir varig forbedring. Det er ikke din feil."
+        headline: "You've tried everything",
+        body: "Products, routines, advice from everywhere — but nothing gives lasting results. That's not your fault."
     ),
     .init(
         icon: "magnifyingglass.circle.fill",
-        headline: "Huden din er unik",
-        body: "Det som virker for andre, virker ikke nodvendigvis for deg. Huden din reagerer pa sine egne triggere."
+        headline: "Your skin is unique",
+        body: "What works for others won't necessarily work for you. Your skin reacts to its own set of triggers."
     ),
     .init(
         icon: "sparkles",
-        headline: "Vi finner monster for deg",
-        body: "Cue analyserer kosthold, stress, sovn og produkter for a finne akkurat hva som pavirker huden din."
+        headline: "We find the patterns for you",
+        body: "Cue analyzes diet, stress, sleep, and products to find exactly what's affecting your skin."
     ),
 ]
 
@@ -48,7 +48,7 @@ struct OnboardingPainPointView: View {
                     }
                 }
 
-                Button(currentIndex < painPoints.count - 1 ? "Neste" : "Fortsett") {
+                Button(currentIndex < painPoints.count - 1 ? "Next" : "Continue") {
                     if currentIndex < painPoints.count - 1 {
                         withAnimation { currentIndex += 1 }
                     } else {

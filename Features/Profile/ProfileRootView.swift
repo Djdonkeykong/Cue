@@ -9,20 +9,20 @@ struct ProfileRootView: View {
             Image(systemName: "person.circle.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(SkinTheme.accent)
-            Text("Profil")
+            Text("Profile")
                 .font(.skin(.title2, weight: .bold))
                 .foregroundStyle(SkinTheme.primaryText)
 
             Spacer()
 
-            Button("Logg ut") {
+            Button("Sign out") {
                 Task { try? await authManager.signOut() }
             }
             .font(.skin(.callout))
             .foregroundStyle(SkinTheme.dangerColor)
             .padding(.bottom, 40)
         }
-        .navigationTitle("Profil")
+        .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(SkinTheme.background)

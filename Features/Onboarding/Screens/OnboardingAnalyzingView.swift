@@ -7,11 +7,11 @@ struct OnboardingAnalyzingView: View {
     @State private var statusIndex = 0
 
     private let statusMessages = [
-        "Analyserer svarene dine...",
-        "Kartlegger hudtriggere...",
-        "Beregner risikoprofil...",
-        "Bygger din personlige plan...",
-        "Ferdigstiller resultater...",
+        "Analyzing your answers...",
+        "Mapping skin triggers...",
+        "Calculating risk profile...",
+        "Building your personal plan...",
+        "Finalizing results...",
     ]
 
     var body: some View {
@@ -41,14 +41,14 @@ struct OnboardingAnalyzingView: View {
                             .font(.skin(.title, weight: .bold))
                             .foregroundStyle(SkinTheme.accent)
                             .contentTransition(.numericText())
-                        Text("fullfort")
+                        Text("complete")
                             .font(.skin(.caption))
                             .foregroundStyle(SkinTheme.secondaryText)
                     }
                 }
 
                 VStack(spacing: 10) {
-                    Text("Analyserer hudprofilen din")
+                    Text("Analyzing your skin profile")
                         .font(.skin(.title3, weight: .bold))
                         .foregroundStyle(SkinTheme.primaryText)
 
