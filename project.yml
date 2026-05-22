@@ -36,8 +36,8 @@ targets:
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         UILaunchScreen:
           UIColorName: ""
-        NSCameraUsageDescription: "SkinScan bruker kameraet til a skanne ingredienslister"
-        NSPhotoLibraryUsageDescription: "SkinScan trenger tilgang til bilder for a analysere ingredienser"
+        NSCameraUsageDescription: "Cue bruker kameraet til a skanne ingredienslister"
+        NSPhotoLibraryUsageDescription: "Cue trenger tilgang til bilder for a analysere ingredienser"
         CFBundleURLTypes:
           - CFBundleURLSchemes:
               - "$(GOOGLE_REVERSED_CLIENT_ID)"
@@ -52,7 +52,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.cueapplication.cueapplication
-        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "iPhone Distribution"
         INFOPLIST_FILE: Cue-Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GOOGLE_REVERSED_CLIENT_ID: ""
