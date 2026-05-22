@@ -79,11 +79,25 @@ workflows:
 
       - name: Export IPA
         script: |
-          EXPORT_PLIST=$(xcode-project export-options-plist)
+          cat > /tmp/ExportOptions.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store-connect</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.cueapplication.cueapplication</key>
+                  <string>cue_profile</string>
+              </dict>
+          </dict>
+          </plist>
+          PLIST
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/Cue.xcarchive" \
             -exportPath "$CM_BUILD_DIR/export" \
-            -exportOptionsPlist "$EXPORT_PLIST"
+            -exportOptionsPlist /tmp/ExportOptions.plist
 
     artifacts:
       - $CM_BUILD_DIR/export/*.ipa
