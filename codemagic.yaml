@@ -8,17 +8,14 @@ workflows:
       app_store_connect: Codemagic_ASC_Key   # Navn pa integrasjonen i Codemagic dashboard
 
     environment:
+      groups:
+        - cue-group
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.cueapplication.cueapplication  # Bytt til din bundle ID
+        bundle_identifier: com.cueapplication.cueapplication
       vars:
-        BUNDLE_ID: com.cueapplication.cueapplication           # Bytt til din bundle ID
+        BUNDLE_ID: com.cueapplication.cueapplication
         XCODE_SCHEME: Cue
-      # Sett disse som hemmelige env-variabler i Codemagic dashboard:
-      # GOOGLE_REVERSED_CLIENT_ID  -> REVERSED_CLIENT_ID fra GoogleService-Info.plist
-      #                               (format: com.googleusercontent.apps.XXXXXXX)
-      # GOOGLE_SERVICE_INFO_PLIST  -> base64-kodet innhold av GoogleService-Info.plist
-      #                               Generer med: base64 -i GoogleService-Info.plist | pbcopy
 
     scripts:
       - name: Install xcodegen
