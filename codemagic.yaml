@@ -86,16 +86,16 @@ workflows:
           PROFILE_UUID=$(cat /tmp/.cue_profile_uuid)
           echo "Exporting with profile UUID: $PROFILE_UUID"
           python3 -c "
-import plistlib, sys
-plist = {
-    'method': 'app-store-connect',
-    'signingStyle': 'manual',
-    'provisioningProfiles': {'com.cueapplication.cueapplication': sys.argv[1]}
-}
-with open('/tmp/ExportOptions.plist', 'wb') as f:
-    plistlib.dump(plist, f)
-print('ExportOptions.plist written')
-" "$PROFILE_UUID"
+          import plistlib, sys
+          plist = {
+              'method': 'app-store-connect',
+              'signingStyle': 'manual',
+              'provisioningProfiles': {'com.cueapplication.cueapplication': sys.argv[1]}
+          }
+          with open('/tmp/ExportOptions.plist', 'wb') as f:
+              plistlib.dump(plist, f)
+          print('ExportOptions.plist written')
+          " "$PROFILE_UUID"
           xcodebuild -exportArchive \
             -archivePath "$CM_BUILD_DIR/Cue.xcarchive" \
             -exportPath "$CM_BUILD_DIR/export" \
