@@ -13,6 +13,8 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.cueapplication.cueapplication
+        certificate: cue_distribution
+        provisioning_profile: cue_profile
       vars:
         BUNDLE_ID: com.cueapplication.cueapplication
         XCODE_SCHEME: Cue
@@ -53,12 +55,6 @@ workflows:
 
       - name: Add certificates to keychain
         script: keychain add-certificates
-
-      - name: Fetch signing files
-        script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
 
       - name: Apply signing profiles
         script: xcode-project use-profiles
