@@ -28,6 +28,7 @@ targets:
       - path: Models
       - path: Services
       - path: Assets.xcassets
+      - path: Fonts
     info:
       path: Cue-Info.plist
       properties:
@@ -48,6 +49,9 @@ targets:
         UIRequiresFullScreen: true
         UIApplicationSupportsIndirectInputEvents: true
         ITSAppUsesNonExemptEncryption: false
+        UIAppFonts:
+          - RobotoCondensed-Bold.ttf
+          - RobotoCondensed-Regular.ttf
     entitlements:
       path: Cue.entitlements
     settings:
