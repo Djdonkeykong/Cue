@@ -46,18 +46,32 @@ struct QuizScreen<Content: View>: View {
                     .padding(24)
                     .padding(.bottom, 8)
                 }
+                .contentMargins(.top, 72, for: .scrollContent)
+                .contentMargins(.bottom, 160, for: .scrollContent)
                 .scrollIndicators(.hidden)
-
-                LinearGradient(colors: [SkinTheme.background, .clear], startPoint: .top, endPoint: .bottom)
-                    .frame(height: 32)
+                .overlay(alignment: .top) {
+                    LinearGradient(
+                        stops: [
+                            .init(color: SkinTheme.background, location: 0),
+                            .init(color: SkinTheme.background, location: 0.50),
+                            .init(color: SkinTheme.background.opacity(0), location: 1)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 100)
                     .allowsHitTesting(false)
-
-                VStack {
-                    Spacer()
-                    LinearGradient(colors: [.clear, SkinTheme.background], startPoint: .top, endPoint: .bottom)
-                        .frame(height: 72)
                 }
-                .allowsHitTesting(false)
+                .overlay(alignment: .bottom) {
+                    LinearGradient(
+                        colors: [SkinTheme.background.opacity(0), SkinTheme.background],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 60)
+                    .ignoresSafeArea(edges: .bottom)
+                    .allowsHitTesting(false)
+                }
             }
 
             if showContinueButton {

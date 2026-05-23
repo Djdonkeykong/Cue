@@ -42,19 +42,33 @@ struct OnboardingPaywallView: View {
                     .padding(.bottom, 36)
             }
         }
+        .contentMargins(.top, 72, for: .scrollContent)
+        .contentMargins(.bottom, 160, for: .scrollContent)
         .scrollIndicators(.hidden)
         .task { await loadOfferings() }
-
-            LinearGradient(colors: [SkinTheme.background, .clear], startPoint: .top, endPoint: .bottom)
-                .frame(height: 32)
-                .allowsHitTesting(false)
-
-            VStack {
-                Spacer()
-                LinearGradient(colors: [.clear, SkinTheme.background], startPoint: .top, endPoint: .bottom)
-                    .frame(height: 72)
-            }
+        .overlay(alignment: .top) {
+            LinearGradient(
+                stops: [
+                    .init(color: SkinTheme.background, location: 0),
+                    .init(color: SkinTheme.background, location: 0.50),
+                    .init(color: SkinTheme.background.opacity(0), location: 1)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 100)
             .allowsHitTesting(false)
+        }
+        .overlay(alignment: .bottom) {
+            LinearGradient(
+                colors: [SkinTheme.background.opacity(0), SkinTheme.background],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 60)
+            .ignoresSafeArea(edges: .bottom)
+            .allowsHitTesting(false)
+        }
 
             Button("Skip") { onComplete() }
                 .font(.skin(.footnote))
