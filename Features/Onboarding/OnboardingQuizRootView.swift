@@ -8,29 +8,28 @@ struct OnboardingQuizRootView: View {
     private let totalQuizSteps = 11
 
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack {
             SkinTheme.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                ProgressView(value: Double(step + 1), total: Double(totalQuizSteps))
-                    .tint(SkinTheme.accent)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 16)
-                    .animation(.easeInOut(duration: 0.3), value: step)
+                HStack(spacing: 12) {
+                    if step > 0 {
+                        BackButton { goBack() }
+                    } else {
+                        Color.clear.frame(width: 38, height: 38)
+                    }
+
+                    ProgressView(value: Double(step + 1), total: Double(totalQuizSteps))
+                        .tint(SkinTheme.accent)
+                        .animation(.easeInOut(duration: 0.3), value: step)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
 
                 quizContent
                     .id(step)
                     .transition(.opacity)
                     .animation(.easeInOut(duration: 0.07), value: step)
-            }
-
-            if step > 0 {
-                HStack {
-                    BackButton { goBack() }
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
             }
         }
     }

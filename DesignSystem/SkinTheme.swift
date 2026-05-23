@@ -143,10 +143,10 @@ enum CueTextStyle {
 extension Font {
     static func cue(_ style: CueTextStyle) -> Font {
         switch style {
-        case .display:     return .system(size: 56, weight: .bold, design: .default)
-        case .heading1:    return .system(size: 44, weight: .bold, design: .default)
-        case .heading2:    return .system(size: 34, weight: .bold, design: .default)
-        case .heading3:    return .system(size: 26, weight: .bold, design: .default)
+        case .display:     return .system(size: 50, weight: .bold, design: .default)
+        case .heading1:    return .system(size: 38, weight: .bold, design: .default)
+        case .heading2:    return .system(size: 28, weight: .bold, design: .default)
+        case .heading3:    return .system(size: 22, weight: .bold, design: .default)
         case .bodyLarge:   return .system(size: 19, weight: .regular)
         case .body:        return .system(size: 17, weight: .regular)
         case .bodyBold:    return .system(size: 17, weight: .semibold)

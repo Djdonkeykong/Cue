@@ -64,20 +64,17 @@ struct QuizScreen<Content: View>: View {
 struct QuizOptionCard: View {
     let title: String
     let subtitle: String?
-    let icon: String?
     let isSelected: Bool
     let action: () -> Void
 
     init(
         title: String,
         subtitle: String? = nil,
-        icon: String? = nil,
         isSelected: Bool,
         action: @escaping () -> Void
     ) {
         self.title = title
         self.subtitle = subtitle
-        self.icon = icon
         self.isSelected = isSelected
         self.action = action
     }
@@ -88,13 +85,6 @@ struct QuizOptionCard: View {
             action()
         } label: {
             HStack(spacing: 12) {
-                if let icon {
-                    Image(systemName: icon)
-                        .font(.body)
-                        .foregroundStyle(isSelected ? .white : SkinTheme.accent)
-                        .frame(width: 26)
-                }
-
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.skin(.body, weight: .semibold))
@@ -112,6 +102,7 @@ struct QuizOptionCard: View {
                     .font(.title3)
                     .foregroundStyle(isSelected ? .white : SkinTheme.accent.opacity(0.35))
             }
+            .frame(maxWidth: .infinity, minHeight: subtitle != nil ? 52 : 40)
             .padding(16)
             .background(
                 isSelected ? SkinTheme.accent : SkinTheme.surface,
@@ -139,7 +130,7 @@ struct QuizGenderView: View {
         QuizScreen(title: "Who are you?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(Gender.allCases, id: \.self) { gender in
-                    QuizOptionCard(title: gender.displayName, icon: gender.systemImage, isSelected: vm.gender == gender) {
+                    QuizOptionCard(title: gender.displayName, isSelected: vm.gender == gender) {
                         vm.gender = gender
                         advance()
                     }
@@ -171,7 +162,6 @@ struct QuizPrimaryConcernView: View {
                     QuizOptionCard(
                         title: concern.displayName,
                         subtitle: concern.description,
-                        icon: concern.systemImage,
                         isSelected: vm.primaryConcern == concern
                     ) {
                         vm.primaryConcern = concern
@@ -205,7 +195,6 @@ struct QuizSkinTypeView: View {
                     QuizOptionCard(
                         title: type.displayName,
                         subtitle: type.description,
-                        icon: type.systemImage,
                         isSelected: vm.skinType == type
                     ) {
                         vm.skinType = type
@@ -234,7 +223,6 @@ struct QuizSensitivityView: View {
                     QuizOptionCard(
                         title: level.displayName,
                         subtitle: level.description,
-                        icon: level.systemImage,
                         isSelected: vm.sensitivityLevel == level
                     ) {
                         vm.sensitivityLevel = level
@@ -321,7 +309,7 @@ struct QuizDurationView: View {
         QuizScreen(title: "How long have you had this concern?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(ConcernDuration.allCases, id: \.self) { dur in
-                    QuizOptionCard(title: dur.displayName, icon: dur.systemImage, isSelected: vm.duration == dur) {
+                    QuizOptionCard(title: dur.displayName, isSelected: vm.duration == dur) {
                         vm.duration = dur
                         advance()
                     }
@@ -345,7 +333,7 @@ struct QuizSkinTrendView: View {
         QuizScreen(title: "How has your skin been lately?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(SkinTrend.allCases, id: \.self) { trend in
-                    QuizOptionCard(title: trend.displayName, icon: trend.systemImage, isSelected: vm.skinTrend == trend) {
+                    QuizOptionCard(title: trend.displayName, isSelected: vm.skinTrend == trend) {
                         vm.skinTrend = trend
                         advance()
                     }
@@ -372,7 +360,6 @@ struct QuizRoutineView: View {
                     QuizOptionCard(
                         title: routine.displayName,
                         subtitle: routine.description,
-                        icon: routine.systemImage,
                         isSelected: vm.routine == routine
                     ) {
                         vm.routine = routine
@@ -401,7 +388,6 @@ struct QuizConsistencyView: View {
                     QuizOptionCard(
                         title: c.displayName,
                         subtitle: c.description,
-                        icon: c.systemImage,
                         isSelected: vm.consistency == c
                     ) {
                         vm.consistency = c
@@ -435,7 +421,6 @@ struct QuizTriggerView: View {
                     QuizOptionCard(
                         title: trigger.displayName,
                         subtitle: trigger.description,
-                        icon: trigger.systemImage,
                         isSelected: vm.lifestyleTrigger == trigger
                     ) {
                         vm.lifestyleTrigger = trigger
@@ -457,12 +442,12 @@ struct QuizGoalView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
-    private let goals: [(text: String, icon: String)] = [
-        ("Get clearer skin",                    "sparkle"),
-        ("Understand what triggers my acne",    "magnifyingglass"),
-        ("Find safe products",                  "checkmark.seal.fill"),
-        ("Reduce blackheads and large pores",   "circle.dashed"),
-        ("Build an effective skincare routine",  "list.clipboard.fill"),
+    private let goals: [String] = [
+        "Get clearer skin",
+        "Understand what triggers my acne",
+        "Find safe products",
+        "Reduce blackheads and large pores",
+        "Build an effective skincare routine",
     ]
 
     var body: some View {
@@ -473,9 +458,9 @@ struct QuizGoalView: View {
             onContinue: onContinue
         ) {
             VStack(spacing: 10) {
-                ForEach(goals, id: \.text) { goal in
-                    QuizOptionCard(title: goal.text, icon: goal.icon, isSelected: vm.primaryGoal == goal.text) {
-                        vm.primaryGoal = goal.text
+                ForEach(goals, id: \.self) { goal in
+                    QuizOptionCard(title: goal, isSelected: vm.primaryGoal == goal) {
+                        vm.primaryGoal = goal
                     }
                 }
             }
@@ -559,7 +544,7 @@ struct QuizNameView: View {
 
                 PrimaryButton("Continue", isEnabled: !vm.displayName.isEmpty) {
                     focused = false
-                    onContinue()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) { onContinue() }
                 }
                 .padding(.bottom, 36)
             }

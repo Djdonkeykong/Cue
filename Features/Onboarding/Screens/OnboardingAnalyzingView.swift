@@ -5,6 +5,15 @@ struct OnboardingAnalyzingView: View {
 
     @State private var progress: Double = 0
 
+    private var statusMessage: String {
+        switch progress {
+        case ..<0.25: return "Reading your responses..."
+        case ..<0.50: return "Identifying your triggers..."
+        case ..<0.75: return "Building your skin profile..."
+        default:      return "Almost done..."
+        }
+    }
+
     var body: some View {
         ZStack {
             SkinTheme.background.ignoresSafeArea()
@@ -25,12 +34,11 @@ struct OnboardingAnalyzingView: View {
                         )
                         .frame(width: 200, height: 200)
                         .rotationEffect(.degrees(-90))
-                        .animation(.easeInOut(duration: 3.0), value: progress)
 
                     Text("\(Int(progress * 100))%")
                         .font(.skin(.title, weight: .bold))
                         .foregroundStyle(SkinTheme.primaryText)
-                        .contentTransition(.numericText())
+                        .monospacedDigit()
                 }
 
                 VStack(spacing: 8) {
@@ -38,9 +46,10 @@ struct OnboardingAnalyzingView: View {
                         .font(.cue(.heading1))
                         .foregroundStyle(SkinTheme.primaryText)
 
-                    Text("Understanding your responses")
+                    Text(statusMessage)
                         .font(.skin(.callout))
                         .foregroundStyle(SkinTheme.secondaryText)
+                        .animation(.easeInOut(duration: 0.4), value: statusMessage)
                 }
 
                 Spacer()
@@ -50,8 +59,8 @@ struct OnboardingAnalyzingView: View {
     }
 
     private func runAnalysis() async {
-        withAnimation(.easeInOut(duration: 3.0)) { progress = 1.0 }
-        try? await Task.sleep(for: .seconds(4.0))
+        withAnimation(.easeInOut(duration: 3.5)) { progress = 1.0 }
+        try? await Task.sleep(for: .seconds(4.5))
         onComplete()
     }
 }
