@@ -41,7 +41,7 @@ workflows:
                       + chunk(b'IEND', b''))
           os.makedirs('Assets.xcassets/AppIcon.appiconset', exist_ok=True)
           with open('Assets.xcassets/AppIcon.appiconset/AppIcon.png', 'wb') as f:
-              f.write(make_png(1024, 1024, 246, 208, 227))
+              f.write(make_png(1024, 1024, 245, 207, 223))
           print('Icon generated')
           PYEOF
 
