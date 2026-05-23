@@ -127,33 +127,33 @@ extension Font {
 
 // MARK: - Cue typography scale (Barlow Condensed + SF Pro)
 enum CueTextStyle {
-    case display        // 52pt Black  - hero/splash headlines
-    case heading1       // 38pt Black  - screen titles
-    case heading2       // 28pt ExtraBold - section headers
-    case heading3       // 22pt Bold   - card titles
-    case bodyLarge      // 18pt Regular
-    case body           // 16pt Regular
-    case bodyBold       // 16pt Semibold
-    case callout        // 15pt Regular
-    case caption        // 13pt Regular
-    case captionBold    // 13pt Medium
-    case label          // 11pt Medium
+    case display        // 56pt Bold - hero/splash headlines
+    case heading1       // 44pt Bold - screen titles
+    case heading2       // 34pt Bold - section headers
+    case heading3       // 26pt Bold - card titles
+    case bodyLarge      // 19pt Regular
+    case body           // 17pt Regular
+    case bodyBold       // 17pt Semibold
+    case callout        // 16pt Regular
+    case caption        // 14pt Regular
+    case captionBold    // 14pt Medium
+    case label          // 12pt Medium
 }
 
 extension Font {
     static func cue(_ style: CueTextStyle) -> Font {
         switch style {
-        case .display:     return .system(size: 52, weight: .bold, design: .default)
-        case .heading1:    return .system(size: 38, weight: .bold, design: .default)
-        case .heading2:    return .system(size: 28, weight: .bold, design: .default)
-        case .heading3:    return .system(size: 22, weight: .bold, design: .default)
-        case .bodyLarge:   return .system(size: 18, weight: .regular)
-        case .body:        return .system(size: 16, weight: .regular)
-        case .bodyBold:    return .system(size: 16, weight: .semibold)
-        case .callout:     return .system(size: 15, weight: .regular)
-        case .caption:     return .system(size: 13, weight: .regular)
-        case .captionBold: return .system(size: 13, weight: .medium)
-        case .label:       return .system(size: 11, weight: .medium)
+        case .display:     return .system(size: 56, weight: .bold, design: .default)
+        case .heading1:    return .system(size: 44, weight: .bold, design: .default)
+        case .heading2:    return .system(size: 34, weight: .bold, design: .default)
+        case .heading3:    return .system(size: 26, weight: .bold, design: .default)
+        case .bodyLarge:   return .system(size: 19, weight: .regular)
+        case .body:        return .system(size: 17, weight: .regular)
+        case .bodyBold:    return .system(size: 17, weight: .semibold)
+        case .callout:     return .system(size: 16, weight: .regular)
+        case .caption:     return .system(size: 14, weight: .regular)
+        case .captionBold: return .system(size: 14, weight: .medium)
+        case .label:       return .system(size: 12, weight: .medium)
         }
     }
 }

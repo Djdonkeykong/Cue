@@ -35,7 +35,7 @@ struct OnboardingAnalyzingView: View {
 
                 VStack(spacing: 8) {
                     Text("Calculating")
-                        .font(.cue(.heading2))
+                        .font(.cue(.heading1))
                         .foregroundStyle(SkinTheme.primaryText)
 
                     Text("Understanding your responses")

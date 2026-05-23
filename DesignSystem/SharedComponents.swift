@@ -27,7 +27,7 @@ struct PrimaryButton: View {
 
     init(
         _ label: String,
-        color: Color = SkinTheme.accent,
+        color: Color = SkinTheme.black,
         isEnabled: Bool = true,
         action: @escaping () -> Void
     ) {
@@ -43,7 +43,7 @@ struct PrimaryButton: View {
             action()
         } label: {
             Text(label)
-                .font(.skin(.body, weight: .semibold))
+                .font(.skin(.callout, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)

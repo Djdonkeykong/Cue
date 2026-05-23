@@ -14,7 +14,7 @@ struct OnboardingResultsPreviewView: View {
                 VStack(spacing: 24) {
                     VStack(spacing: 6) {
                         Text("Your profile is ready")
-                            .font(.cue(.heading2))
+                            .font(.cue(.heading1))
                             .foregroundStyle(SkinTheme.primaryText)
                         Text("We've analyzed your answers and found some important patterns.")
                             .font(.skin(.callout))

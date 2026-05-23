@@ -34,7 +34,7 @@ struct QuizScreen<Content: View>: View {
                     .foregroundStyle(SkinTheme.primaryText)
                 if let subtitle {
                     Text(subtitle)
-                        .font(.skin(.callout))
+                        .font(.skin(.body))
                         .foregroundStyle(SkinTheme.secondaryText)
                 }
             }
@@ -97,11 +97,11 @@ struct QuizOptionCard: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.skin(.callout, weight: .semibold))
+                        .font(.skin(.body, weight: .semibold))
                         .foregroundStyle(isSelected ? .white : SkinTheme.primaryText)
                     if let subtitle {
                         Text(subtitle)
-                            .font(.skin(.footnote))
+                            .font(.skin(.callout))
                             .foregroundStyle(isSelected ? .white.opacity(0.75) : SkinTheme.secondaryText)
                     }
                 }

@@ -123,7 +123,7 @@ private struct PainPointSlide: View {
         VStack(spacing: 12) {
             Spacer()
             Text(point.headline)
-                .font(.cue(.heading2))
+                .font(.cue(.heading1))
                 .foregroundStyle(SkinTheme.primaryText)
                 .multilineTextAlignment(.center)
             Text(point.body)

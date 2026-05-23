@@ -24,7 +24,7 @@ struct OnboardingSocialProofView: View {
 
                     VStack(spacing: 8) {
                         Text("Enjoying Cue so far?")
-                            .font(.cue(.heading2))
+                            .font(.cue(.heading1))
                             .foregroundStyle(SkinTheme.primaryText)
                             .multilineTextAlignment(.center)
 

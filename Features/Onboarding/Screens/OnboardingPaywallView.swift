@@ -82,7 +82,7 @@ struct OnboardingPaywallView: View {
     private var header: some View {
         VStack(spacing: 8) {
             Text("Unlock Cue Pro")
-                .font(.cue(.heading2))
+                .font(.cue(.heading1))
                 .foregroundStyle(SkinTheme.primaryText)
             Text("Get access to all results and personalized tools")
                 .font(.skin(.callout))
