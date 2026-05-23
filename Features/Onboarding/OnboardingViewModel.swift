@@ -3,16 +3,16 @@ import SwiftUI
 @Observable
 final class OnboardingViewModel {
     var displayName      = ""
-    var gender           = Gender.preferNotToSay
-    var primaryConcern   : PrimaryConcern?  = nil
-    var skinType         = SkinType.combination
-    var sensitivityLevel : SensitivityLevel? = nil
-    var severity         = 3
-    var duration         = ConcernDuration.lessThan6Months
-    var skinTrend        : SkinTrend?        = nil
-    var routine          = SkincareRoutine.basic
-    var consistency      = RoutineConsistency.sometimes
-    var lifestyleTrigger : LifestyleTrigger? = nil
+    var gender           : Gender?            = nil
+    var primaryConcern   : PrimaryConcern?    = nil
+    var skinType         : SkinType?          = nil
+    var sensitivityLevel : SensitivityLevel?  = nil
+    var severity         = 1
+    var duration         : ConcernDuration?   = nil
+    var skinTrend        : SkinTrend?         = nil
+    var routine          : SkincareRoutine?   = nil
+    var consistency      : RoutineConsistency? = nil
+    var lifestyleTrigger : LifestyleTrigger?  = nil
     var age              = ""
     var primaryGoal      = ""
 
@@ -20,15 +20,15 @@ final class OnboardingViewModel {
         UserOnboardingProfile(
             userId: userId,
             displayName: displayName.isEmpty ? nil : displayName,
-            gender: gender,
+            gender: gender ?? .preferNotToSay,
             primaryConcern: primaryConcern ?? .pimplesAndBreakouts,
-            skinType: skinType,
+            skinType: skinType ?? .combination,
             sensitivityLevel: sensitivityLevel ?? .somewhat,
             concernSeverity: severity,
-            concernDuration: duration,
+            concernDuration: duration ?? .lessThan6Months,
             skinTrend: skinTrend ?? .aboutTheSame,
-            skincareRoutine: routine,
-            consistency: consistency,
+            skincareRoutine: routine ?? .basic,
+            consistency: consistency ?? .sometimes,
             lifestyleTrigger: lifestyleTrigger ?? .notSure,
             age: Int(age),
             primaryGoal: primaryGoal.isEmpty ? nil : primaryGoal,
@@ -46,7 +46,7 @@ final class OnboardingViewModel {
             case nil:                  return []
             }
         }()
-        return SkinProfile(userId: userId, skinType: skinType, skinConcerns: concerns)
+        return SkinProfile(userId: userId, skinType: skinType ?? .combination, skinConcerns: concerns)
     }
 
     var breakoutRiskPercent: Int {
