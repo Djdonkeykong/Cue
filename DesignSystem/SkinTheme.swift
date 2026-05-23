@@ -4,7 +4,7 @@ import UIKit
 enum SkinTheme {
     // MARK: - Backgrounds
     static let background = adaptiveColor(
-        light: UIColor(red: 0.996, green: 0.961, blue: 0.980, alpha: 1),  // #FEF5FA
+        light: UIColor(red: 0.992, green: 0.910, blue: 0.949, alpha: 1),  // #FDE8F2
         dark:  UIColor(red: 0.078, green: 0.063, blue: 0.071, alpha: 1)   // #141012
     )
     static let surface = adaptiveColor(
@@ -38,6 +38,7 @@ enum SkinTheme {
     static let primaryText   = Color(uiColor: .label)
     static let secondaryText = Color(uiColor: .secondaryLabel)
     static let tertiaryText  = Color(uiColor: .tertiaryLabel)
+    static let black         = Color(red: 0.055, green: 0.055, blue: 0.055)  // #0E0E0E
 
     // MARK: - Brand
     /// Pastel pink - primary brand color, card backgrounds
@@ -112,7 +113,7 @@ extension SkinTheme {
     static var backgroundUIColor: UIColor {
         UIColor { $0.userInterfaceStyle == .dark
             ? UIColor(red: 0.078, green: 0.063, blue: 0.071, alpha: 1)
-            : UIColor(red: 0.996, green: 0.961, blue: 0.980, alpha: 1)
+            : UIColor(red: 0.992, green: 0.910, blue: 0.949, alpha: 1)
         }
     }
 }

@@ -128,7 +128,7 @@ struct OnboardingAuthView: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background(Color.black)
+            .background(SkinTheme.black)
             .clipShape(Capsule())
         }
         .disabled(isAnyLoading)

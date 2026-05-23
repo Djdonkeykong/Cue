@@ -83,7 +83,7 @@ struct OnboardingSignInView: View {
         .background(
             LinearGradient(
                 colors: [
-                    Color(red: 0.996, green: 0.961, blue: 0.980),
+                    Color(red: 0.992, green: 0.910, blue: 0.949),
                     Color(red: 0.973, green: 0.894, blue: 0.949)
                 ],
                 startPoint: .top,
@@ -125,7 +125,7 @@ struct OnboardingSignInView: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background(Color.black)
+            .background(SkinTheme.black)
             .clipShape(Capsule())
         }
         .disabled(isAnyLoading)

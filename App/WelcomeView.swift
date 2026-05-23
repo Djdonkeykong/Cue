@@ -8,7 +8,7 @@ struct WelcomeView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color(red: 0.996, green: 0.961, blue: 0.980),
+                    Color(red: 0.992, green: 0.910, blue: 0.949),
                     Color(red: 0.973, green: 0.894, blue: 0.949)
                 ],
                 startPoint: .top,
@@ -22,10 +22,10 @@ struct WelcomeView: View {
                 VStack(spacing: 8) {
                     Text("Cue")
                         .font(.cue(.heading1))
-                        .foregroundStyle(.black)
+                        .foregroundStyle(SkinTheme.black)
                     Text("Your skin, finally understood.")
                         .font(.skin(.title3))
-                        .foregroundStyle(.black.opacity(0.55))
+                        .foregroundStyle(SkinTheme.black.opacity(0.55))
                         .multilineTextAlignment(.center)
                 }
 
@@ -34,21 +34,21 @@ struct WelcomeView: View {
                 VStack(spacing: 20) {
                     Text("Find out what's actually triggering your skin — and what to do about it.")
                         .font(.skin(.callout))
-                        .foregroundStyle(.black.opacity(0.5))
+                        .foregroundStyle(SkinTheme.black.opacity(0.5))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
 
-                    PrimaryButton("Get started", color: .black, action: onContinue)
+                    PrimaryButton("Get started", color: SkinTheme.black, action: onContinue)
 
                     if let onSignIn {
                         HStack(spacing: 4) {
                             Text("Already have an account?")
-                                .foregroundStyle(.black.opacity(0.45))
+                                .foregroundStyle(SkinTheme.black.opacity(0.45))
                             Button("Sign in") {
                                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                                 onSignIn()
                             }
-                            .foregroundStyle(.black.opacity(0.75))
+                            .foregroundStyle(SkinTheme.black.opacity(0.75))
                             .fontWeight(.semibold)
                         }
                         .font(.skin(.subheadline))
