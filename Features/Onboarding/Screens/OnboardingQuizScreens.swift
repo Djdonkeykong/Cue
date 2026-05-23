@@ -28,22 +28,36 @@ struct QuizScreen<Content: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(title)
-                            .font(.cue(.heading2))
-                            .foregroundStyle(SkinTheme.primaryText)
-                        if let subtitle {
-                            Text(subtitle)
-                                .font(.skin(.callout))
-                                .foregroundStyle(SkinTheme.secondaryText)
+            ZStack(alignment: .top) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(title)
+                                .font(.cue(.heading2))
+                                .foregroundStyle(SkinTheme.primaryText)
+                            if let subtitle {
+                                Text(subtitle)
+                                    .font(.skin(.callout))
+                                    .foregroundStyle(SkinTheme.secondaryText)
+                            }
                         }
+                        content()
                     }
-                    content()
+                    .padding(24)
+                    .padding(.bottom, 8)
                 }
-                .padding(24)
-                .padding(.bottom, 8)
+                .scrollIndicators(.hidden)
+
+                LinearGradient(colors: [SkinTheme.background, .clear], startPoint: .top, endPoint: .bottom)
+                    .frame(height: 32)
+                    .allowsHitTesting(false)
+
+                VStack {
+                    Spacer()
+                    LinearGradient(colors: [.clear, SkinTheme.background], startPoint: .top, endPoint: .bottom)
+                        .frame(height: 72)
+                }
+                .allowsHitTesting(false)
             }
 
             if showContinueButton {

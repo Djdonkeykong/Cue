@@ -9,6 +9,7 @@ struct OnboardingResultsPreviewView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            ZStack(alignment: .top) {
             ScrollView {
                 VStack(spacing: 24) {
                     VStack(spacing: 6) {
@@ -62,6 +63,19 @@ struct OnboardingResultsPreviewView: View {
                 }
                 .padding(.bottom, 8)
             }
+            .scrollIndicators(.hidden)
+
+            LinearGradient(colors: [SkinTheme.background, .clear], startPoint: .top, endPoint: .bottom)
+                .frame(height: 32)
+                .allowsHitTesting(false)
+
+            VStack {
+                Spacer()
+                LinearGradient(colors: [.clear, SkinTheme.background], startPoint: .top, endPoint: .bottom)
+                    .frame(height: 72)
+            }
+            .allowsHitTesting(false)
+            } // ZStack
 
             PrimaryButton("Unlock all results", action: onContinue)
                 .padding(.bottom, 36)

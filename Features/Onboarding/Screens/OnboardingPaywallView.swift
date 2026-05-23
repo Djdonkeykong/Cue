@@ -42,7 +42,19 @@ struct OnboardingPaywallView: View {
                     .padding(.bottom, 36)
             }
         }
+        .scrollIndicators(.hidden)
         .task { await loadOfferings() }
+
+            LinearGradient(colors: [SkinTheme.background, .clear], startPoint: .top, endPoint: .bottom)
+                .frame(height: 32)
+                .allowsHitTesting(false)
+
+            VStack {
+                Spacer()
+                LinearGradient(colors: [.clear, SkinTheme.background], startPoint: .top, endPoint: .bottom)
+                    .frame(height: 72)
+            }
+            .allowsHitTesting(false)
 
             Button("Skip") { onComplete() }
                 .font(.skin(.footnote))
