@@ -1,64 +1,67 @@
 import SwiftUI
 
 struct OnboardingQuizRootView: View {
-    @AppStorage("cue.onboardingCompleted") private var onboardingCompleted = false
-    @EnvironmentObject private var authManager: AuthManager
-    @State private var vm = OnboardingViewModel()
-    @State private var step = 0
+    @Bindable var vm: OnboardingViewModel
+    let onComplete: () -> Void
 
-    private let totalQuizSteps = 9
+    @State private var step = 0
+    private let totalQuizSteps = 11
 
     var body: some View {
         ZStack(alignment: .top) {
             SkinTheme.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                if step < totalQuizSteps {
-                    ProgressView(value: Double(step + 1), total: Double(totalQuizSteps))
-                        .tint(SkinTheme.accent)
-                        .padding(.horizontal, 24)
-                        .padding(.top, 16)
-                        .animation(.easeInOut(duration: 0.3), value: step)
-                }
+                ProgressView(value: Double(step + 1), total: Double(totalQuizSteps))
+                    .tint(SkinTheme.accent)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 16)
+                    .animation(.easeInOut(duration: 0.3), value: step)
 
                 quizContent
                     .id(step)
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .trailing).combined(with: .opacity),
-                        removal:   .move(edge: .leading).combined(with: .opacity)
-                    ))
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.15), value: step)
+            }
+
+            if step > 0 {
+                HStack {
+                    BackButton { goBack() }
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
             }
         }
-        .animation(.spring(duration: 0.35), value: step)
     }
 
     @ViewBuilder
     private var quizContent: some View {
         switch step {
-        case 0:  QuizGenderView(vm: vm)                         { step += 1 }
-        case 1:  QuizSkinTypeView(vm: vm)                       { step += 1 }
-        case 2:  QuizConcernsView(vm: vm)                       { step += 1 }
-        case 3:  QuizSeverityView(vm: vm)                       { step += 1 }
-        case 4:  QuizDurationView(vm: vm)                       { step += 1 }
-        case 5:  QuizAgeView(vm: vm)                            { step += 1 }
-        case 6:  QuizRoutineView(vm: vm)                        { step += 1 }
-        case 7:  QuizLifestyleView(vm: vm)                      { step += 1 }
-        case 8:  QuizGoalView(vm: vm)                           { step += 1 }
-        case 9:  OnboardingAnalyzingView                        { step += 1 }
-        case 10: OnboardingResultsPreviewView(vm: vm)           { step += 1 }
-        case 11: OnboardingSocialProofView                      { step += 1 }
-        default: OnboardingPaywallView(vm: vm, onComplete: finish)
+        case 0:  QuizGenderView(vm: vm)          { advance() }
+        case 1:  QuizPrimaryConcernView(vm: vm)  { advance() }
+        case 2:  QuizSkinTypeView(vm: vm)        { advance() }
+        case 3:  QuizSensitivityView(vm: vm)     { advance() }
+        case 4:  QuizSeveritySliderView(vm: vm)  { advance() }
+        case 5:  QuizDurationView(vm: vm)        { advance() }
+        case 6:  QuizSkinTrendView(vm: vm)       { advance() }
+        case 7:  QuizRoutineView(vm: vm)         { advance() }
+        case 8:  QuizConsistencyView(vm: vm)     { advance() }
+        case 9:  QuizTriggerView(vm: vm)         { advance() }
+        default: QuizGoalView(vm: vm)            { advance() }
         }
     }
 
-    private func finish() {
-        guard let userId = authManager.userId else { return }
-        let profile = vm.buildOnboardingProfile(userId: userId)
-        let skinProfile = vm.buildSkinProfile(userId: userId)
-        Task {
-            try? await CloudSyncManager.shared.uploadOnboardingProfile(profile)
-            try? await CloudSyncManager.shared.uploadProfile(skinProfile)
+    private func advance() {
+        if step >= totalQuizSteps - 1 {
+            onComplete()
+            return
         }
-        onboardingCompleted = true
+        withAnimation(.easeInOut(duration: 0.15)) { step += 1 }
+    }
+
+    private func goBack() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        withAnimation(.easeInOut(duration: 0.15)) { step -= 1 }
     }
 }

@@ -9,10 +9,10 @@ struct AppRootView: View {
         Group {
             if !authManager.isReady {
                 SplashView()
-            } else if !authManager.isAuthenticated {
-                OnboardingRootView()
             } else if !onboardingCompleted {
-                OnboardingQuizRootView()
+                OnboardingRootView()
+            } else if !authManager.isAuthenticated {
+                OnboardingSignInView(onBack: nil, onSignUp: nil)
             } else {
                 MainTabView()
             }

@@ -6,6 +6,7 @@ struct QuizScreen<Content: View>: View {
     let title: String
     let subtitle: String?
     let continueEnabled: Bool
+    let showContinueButton: Bool
     let onContinue: () -> Void
     @ViewBuilder let content: () -> Content
 
@@ -13,12 +14,14 @@ struct QuizScreen<Content: View>: View {
         title: String,
         subtitle: String? = nil,
         continueEnabled: Bool = true,
+        showContinueButton: Bool = true,
         onContinue: @escaping () -> Void,
         @ViewBuilder content: @escaping () -> Content
     ) {
         self.title = title
         self.subtitle = subtitle
         self.continueEnabled = continueEnabled
+        self.showContinueButton = showContinueButton
         self.onContinue = onContinue
         self.content = content
     }
@@ -29,7 +32,7 @@ struct QuizScreen<Content: View>: View {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(title)
-                            .font(.skin(.title2, weight: .bold))
+                            .font(.cue(.heading2))
                             .foregroundStyle(SkinTheme.primaryText)
                         if let subtitle {
                             Text(subtitle)
@@ -43,18 +46,10 @@ struct QuizScreen<Content: View>: View {
                 .padding(.bottom, 8)
             }
 
-            Button("Continue", action: onContinue)
-                .font(.skin(.body, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(
-                    continueEnabled ? SkinTheme.accent : SkinTheme.accent.opacity(0.35),
-                    in: Capsule()
-                )
-                .padding(.horizontal, 24)
-                .padding(.bottom, 36)
-                .disabled(!continueEnabled)
+            if showContinueButton {
+                PrimaryButton("Continue", isEnabled: continueEnabled, action: onContinue)
+                    .padding(.bottom, 36)
+            }
         }
     }
 }
@@ -83,7 +78,10 @@ struct QuizOptionCard: View {
     }
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            action()
+        } label: {
             HStack(spacing: 12) {
                 if let icon {
                     Image(systemName: icon)
@@ -112,10 +110,10 @@ struct QuizOptionCard: View {
             .padding(16)
             .background(
                 isSelected ? SkinTheme.accent : SkinTheme.surface,
-                in: RoundedRectangle(cornerRadius: 14)
+                in: RoundedRectangle(cornerRadius: 18, style: .continuous)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(
                         isSelected ? Color.clear : SkinTheme.accent.opacity(0.15),
                         lineWidth: 1
@@ -126,26 +124,65 @@ struct QuizOptionCard: View {
     }
 }
 
-// MARK: - Quiz: Gender
+// MARK: - Q0: Gender
 
 struct QuizGenderView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(title: "Who are you?", onContinue: onContinue) {
+        QuizScreen(title: "Who are you?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(Gender.allCases, id: \.self) { gender in
-                    QuizOptionCard(title: gender.displayName, isSelected: vm.gender == gender) {
+                    QuizOptionCard(title: gender.displayName, icon: gender.systemImage, isSelected: vm.gender == gender) {
                         vm.gender = gender
+                        advance()
                     }
                 }
             }
         }
     }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
 }
 
-// MARK: - Quiz: Skin type
+// MARK: - Q1: Primary concern
+
+struct QuizPrimaryConcernView: View {
+    @Bindable var vm: OnboardingViewModel
+    let onContinue: () -> Void
+
+    var body: some View {
+        QuizScreen(
+            title: "What's your main skin concern?",
+            subtitle: "Choose the one that fits best.",
+            showContinueButton: false,
+            onContinue: onContinue
+        ) {
+            VStack(spacing: 10) {
+                ForEach(PrimaryConcern.allCases, id: \.self) { concern in
+                    QuizOptionCard(
+                        title: concern.displayName,
+                        subtitle: concern.description,
+                        icon: concern.systemImage,
+                        isSelected: vm.primaryConcern == concern
+                    ) {
+                        vm.primaryConcern = concern
+                        advance()
+                    }
+                }
+            }
+        }
+    }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
+}
+
+// MARK: - Q2: Skin type
 
 struct QuizSkinTypeView: View {
     @Bindable var vm: OnboardingViewModel
@@ -155,6 +192,7 @@ struct QuizSkinTypeView: View {
         QuizScreen(
             title: "What's your skin type?",
             subtitle: "Choose the option that fits best.",
+            showContinueButton: false,
             onContinue: onContinue
         ) {
             VStack(spacing: 10) {
@@ -166,67 +204,102 @@ struct QuizSkinTypeView: View {
                         isSelected: vm.skinType == type
                     ) {
                         vm.skinType = type
+                        advance()
                     }
                 }
             }
         }
     }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
 }
 
-// MARK: - Quiz: Concerns (multi-select)
+// MARK: - Q3: Sensitivity
 
-struct QuizConcernsView: View {
+struct QuizSensitivityView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(
-            title: "What skin concerns do you have?",
-            subtitle: "Select all that apply.",
-            continueEnabled: !vm.concerns.isEmpty,
-            onContinue: onContinue
-        ) {
+        QuizScreen(title: "How sensitive is your skin?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
-                ForEach(SkinConcern.allCases, id: \.self) { concern in
-                    let selected = vm.concerns.contains(concern)
+                ForEach(SensitivityLevel.allCases, id: \.self) { level in
                     QuizOptionCard(
-                        title: concern.displayName,
-                        icon: concern.systemImage,
-                        isSelected: selected
+                        title: level.displayName,
+                        subtitle: level.description,
+                        icon: level.systemImage,
+                        isSelected: vm.sensitivityLevel == level
                     ) {
-                        if selected { vm.concerns.remove(concern) }
-                        else        { vm.concerns.insert(concern) }
+                        vm.sensitivityLevel = level
+                        advance()
                     }
                 }
             }
         }
     }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
 }
 
-// MARK: - Quiz: Severity
+// MARK: - Q4: Severity (slider)
 
-struct QuizSeverityView: View {
+struct QuizSeveritySliderView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
-    private let options: [(label: String, detail: String, value: Int)] = [
-        ("Mild",     "Rarely a breakout",                          1),
-        ("Light",    "A few occasional blemishes",                 2),
-        ("Moderate", "Noticeable breakouts regularly",             3),
-        ("Severe",   "Frequent and painful breakouts",             4),
-        ("Very severe", "Persistent, covering large areas",        5),
+    private let levels: [(label: String, detail: String)] = [
+        ("Mild",        "Rarely a breakout"),
+        ("Light",       "Occasional blemishes"),
+        ("Moderate",    "Regular noticeable breakouts"),
+        ("Severe",      "Frequent and painful breakouts"),
+        ("Very severe", "Persistent, covering large areas"),
     ]
 
+    private var current: (label: String, detail: String) { levels[vm.severity - 1] }
+
     var body: some View {
-        QuizScreen(title: "How severe is the problem?", onContinue: onContinue) {
-            VStack(spacing: 10) {
-                ForEach(options, id: \.value) { opt in
-                    QuizOptionCard(
-                        title: opt.label,
-                        subtitle: opt.detail,
-                        isSelected: vm.severity == opt.value
-                    ) {
-                        vm.severity = opt.value
+        QuizScreen(title: "How severe is the problem?", subtitle: "Drag to describe your typical skin day.", onContinue: onContinue) {
+            VStack(spacing: 24) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(current.label)
+                        .font(.cue(.heading3))
+                        .foregroundStyle(SkinTheme.primaryText)
+                    Text(current.detail)
+                        .font(.skin(.callout))
+                        .foregroundStyle(SkinTheme.secondaryText)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+                .background(SkinTheme.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(SkinTheme.accent.opacity(0.25), lineWidth: 1)
+                )
+                .animation(.easeInOut(duration: 0.15), value: vm.severity)
+
+                VStack(spacing: 10) {
+                    Slider(
+                        value: Binding(
+                            get: { Double(vm.severity) },
+                            set: { vm.severity = Int($0.rounded()) }
+                        ),
+                        in: 1...5,
+                        step: 1
+                    )
+                    .tint(SkinTheme.accent)
+
+                    HStack {
+                        Text("Mild")
+                            .font(.skin(.caption))
+                            .foregroundStyle(SkinTheme.secondaryText)
+                        Spacer()
+                        Text("Very severe")
+                            .font(.skin(.caption))
+                            .foregroundStyle(SkinTheme.secondaryText)
                     }
                 }
             }
@@ -234,112 +307,171 @@ struct QuizSeverityView: View {
     }
 }
 
-// MARK: - Quiz: Duration
+// MARK: - Q5: Duration
 
 struct QuizDurationView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(
-            title: "How long have you had these concerns?",
-            onContinue: onContinue
-        ) {
+        QuizScreen(title: "How long have you had this concern?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
                 ForEach(ConcernDuration.allCases, id: \.self) { dur in
-                    QuizOptionCard(title: dur.displayName, isSelected: vm.duration == dur) {
+                    QuizOptionCard(title: dur.displayName, icon: dur.systemImage, isSelected: vm.duration == dur) {
                         vm.duration = dur
+                        advance()
                     }
                 }
             }
         }
     }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
 }
 
-// MARK: - Quiz: Age
+// MARK: - Q6: Skin trend
 
-struct QuizAgeView: View {
+struct QuizSkinTrendView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(title: "What's your age group?", onContinue: onContinue) {
+        QuizScreen(title: "How has your skin been lately?", showContinueButton: false, onContinue: onContinue) {
             VStack(spacing: 10) {
-                ForEach(AgeRange.allCases, id: \.self) { age in
-                    QuizOptionCard(title: age.displayName, isSelected: vm.ageRange == age) {
-                        vm.ageRange = age
+                ForEach(SkinTrend.allCases, id: \.self) { trend in
+                    QuizOptionCard(title: trend.displayName, icon: trend.systemImage, isSelected: vm.skinTrend == trend) {
+                        vm.skinTrend = trend
+                        advance()
                     }
                 }
             }
         }
     }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
 }
 
-// MARK: - Quiz: Routine + consistency
+// MARK: - Q7: Skincare routine
 
 struct QuizRoutineView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
     var body: some View {
-        QuizScreen(title: "What's your skincare routine like?", onContinue: onContinue) {
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(spacing: 10) {
-                    ForEach(SkincareRoutine.allCases, id: \.self) { routine in
-                        QuizOptionCard(
-                            title: routine.displayName,
-                            subtitle: routine.description,
-                            isSelected: vm.routine == routine
-                        ) {
-                            vm.routine = routine
-                        }
-                    }
-                }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("How consistent are you?")
-                        .font(.skin(.headline, weight: .semibold))
-                        .foregroundStyle(SkinTheme.primaryText)
-
-                    VStack(spacing: 10) {
-                        ForEach(RoutineConsistency.allCases, id: \.self) { c in
-                            QuizOptionCard(
-                                title: c.displayName,
-                                subtitle: c.description,
-                                isSelected: vm.consistency == c
-                            ) {
-                                vm.consistency = c
-                            }
-                        }
+        QuizScreen(title: "What's your skincare routine like?", showContinueButton: false, onContinue: onContinue) {
+            VStack(spacing: 10) {
+                ForEach(SkincareRoutine.allCases, id: \.self) { routine in
+                    QuizOptionCard(
+                        title: routine.displayName,
+                        subtitle: routine.description,
+                        icon: routine.systemImage,
+                        isSelected: vm.routine == routine
+                    ) {
+                        vm.routine = routine
+                        advance()
                     }
                 }
             }
         }
     }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
 }
 
-// MARK: - Quiz: Lifestyle (multi-select)
+// MARK: - Q8: Routine consistency
 
-struct QuizLifestyleView: View {
+struct QuizConsistencyView: View {
+    @Bindable var vm: OnboardingViewModel
+    let onContinue: () -> Void
+
+    var body: some View {
+        QuizScreen(title: "How consistent are you?", showContinueButton: false, onContinue: onContinue) {
+            VStack(spacing: 10) {
+                ForEach(RoutineConsistency.allCases, id: \.self) { c in
+                    QuizOptionCard(
+                        title: c.displayName,
+                        subtitle: c.description,
+                        icon: c.systemImage,
+                        isSelected: vm.consistency == c
+                    ) {
+                        vm.consistency = c
+                        advance()
+                    }
+                }
+            }
+        }
+    }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
+}
+
+// MARK: - Q9: Lifestyle trigger
+
+struct QuizTriggerView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
 
     var body: some View {
         QuizScreen(
-            title: "What sounds like you?",
-            subtitle: "Select all that apply. We use this to find your triggers.",
+            title: "What's your main trigger?",
+            subtitle: "Your best guess is fine.",
+            showContinueButton: false,
             onContinue: onContinue
         ) {
             VStack(spacing: 10) {
-                ForEach(LifestyleFactor.allCases, id: \.self) { factor in
-                    let selected = vm.lifestyleFactors.contains(factor)
+                ForEach(LifestyleTrigger.allCases, id: \.self) { trigger in
                     QuizOptionCard(
-                        title: factor.displayName,
-                        icon: factor.icon,
-                        isSelected: selected
+                        title: trigger.displayName,
+                        subtitle: trigger.description,
+                        icon: trigger.systemImage,
+                        isSelected: vm.lifestyleTrigger == trigger
                     ) {
-                        if selected { vm.lifestyleFactors.remove(factor) }
-                        else        { vm.lifestyleFactors.insert(factor) }
+                        vm.lifestyleTrigger = trigger
+                        advance()
+                    }
+                }
+            }
+        }
+    }
+
+    private func advance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) { onContinue() }
+    }
+}
+
+// MARK: - Q10: Goal
+
+struct QuizGoalView: View {
+    @Bindable var vm: OnboardingViewModel
+    let onContinue: () -> Void
+
+    private let goals: [(text: String, icon: String)] = [
+        ("Get clearer skin",                    "sparkle"),
+        ("Understand what triggers my acne",    "magnifyingglass"),
+        ("Find safe products",                  "checkmark.seal.fill"),
+        ("Reduce blackheads and large pores",   "circle.dashed"),
+        ("Build an effective skincare routine",  "list.clipboard.fill"),
+    ]
+
+    var body: some View {
+        QuizScreen(
+            title: "What's your goal?",
+            subtitle: "Choose what matters most to you right now.",
+            continueEnabled: !vm.primaryGoal.isEmpty,
+            onContinue: onContinue
+        ) {
+            VStack(spacing: 10) {
+                ForEach(goals, id: \.text) { goal in
+                    QuizOptionCard(title: goal.text, icon: goal.icon, isSelected: vm.primaryGoal == goal.text) {
+                        vm.primaryGoal = goal.text
                     }
                 }
             }
@@ -347,41 +479,84 @@ struct QuizLifestyleView: View {
     }
 }
 
-// MARK: - Quiz: Goal + name
+// MARK: - Age input (outside quiz)
 
-struct QuizGoalView: View {
+struct QuizAgeInputView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
-
-    private let goals = [
-        "Get clearer skin",
-        "Understand what triggers my acne",
-        "Find safe products",
-        "Reduce blackheads and large pores",
-        "Build an effective skincare routine",
-    ]
+    @State private var selectedAge: Int = 18
 
     var body: some View {
-        QuizScreen(title: "What's your goal?", subtitle: "Choose what matters most to you right now.", onContinue: onContinue) {
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(spacing: 10) {
-                    ForEach(goals, id: \.self) { goal in
-                        QuizOptionCard(title: goal, isSelected: vm.primaryGoal == goal) {
-                            vm.primaryGoal = goal
-                        }
+        ZStack {
+            SkinTheme.background.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                Spacer()
+
+                Text("How old are you?")
+                    .font(.cue(.heading1))
+                    .foregroundStyle(SkinTheme.primaryText)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+
+                Picker("Age", selection: $selectedAge) {
+                    ForEach(13...80, id: \.self) { age in
+                        Text("\(age)").tag(age)
                     }
                 }
+                .pickerStyle(.wheel)
+                .tint(SkinTheme.accent)
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("What's your name? (optional)")
-                        .font(.skin(.callout, weight: .semibold))
-                        .foregroundStyle(SkinTheme.primaryText)
-                    TextField("Your first name", text: $vm.displayName)
-                        .font(.skin(.body))
-                        .padding(14)
-                        .background(SkinTheme.inputSurface, in: RoundedRectangle(cornerRadius: 12))
+                Spacer()
+
+                PrimaryButton("Continue") {
+                    vm.age = String(selectedAge)
+                    onContinue()
                 }
+                .padding(.bottom, 36)
             }
         }
+        .onAppear {
+            if let existing = Int(vm.age) { selectedAge = existing }
+        }
+    }
+}
+
+// MARK: - Name input (outside quiz)
+
+struct QuizNameView: View {
+    @Bindable var vm: OnboardingViewModel
+    let onContinue: () -> Void
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        ZStack {
+            SkinTheme.background.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                Spacer()
+
+                VStack(spacing: 16) {
+                    Text("What should we call you?")
+                        .font(.cue(.heading1))
+                        .foregroundStyle(SkinTheme.primaryText)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+
+                    TextField("Your name", text: $vm.displayName)
+                        .focused($focused)
+                        .multilineTextAlignment(.center)
+                        .font(.cue(.heading1))
+                        .foregroundStyle(SkinTheme.primaryText)
+                        .frame(maxWidth: .infinity)
+                }
+
+                Spacer()
+
+                PrimaryButton("Continue", isEnabled: !vm.displayName.isEmpty, action: onContinue)
+                    .padding(.bottom, 36)
+            }
+        }
+        .onAppear { focused = true }
     }
 }

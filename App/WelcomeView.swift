@@ -39,13 +39,7 @@ struct WelcomeView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
 
-                    Button("Get started", action: onContinue)
-                        .font(.skin(.body, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(Color.black, in: Capsule())
-                        .padding(.horizontal, 24)
+                    PrimaryButton("Get started", color: .black, action: onContinue)
 
                     if let onSignIn {
                         HStack(spacing: 4) {

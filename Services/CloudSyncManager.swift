@@ -96,15 +96,16 @@ private struct OnboardingProfilePayload: Codable {
     let userId: String
     let displayName: String?
     let gender: String
+    let primaryConcern: String
     let skinType: String
-    let skinConcerns: [String]
+    let sensitivityLevel: String
     let concernSeverity: Int
     let concernDuration: String
-    let ageRange: String
+    let skinTrend: String
     let skincareRoutine: String
     let consistency: String
-    let lifestyleFactors: [String]
-    let sensitivityLevel: String
+    let lifestyleTrigger: String
+    let age: Int?
     let primaryGoal: String?
     let onboardingCompletedAt: String?
 
@@ -113,15 +114,16 @@ private struct OnboardingProfilePayload: Codable {
         case userId                = "user_id"
         case displayName           = "display_name"
         case gender
+        case primaryConcern        = "primary_concern"
         case skinType              = "skin_type"
-        case skinConcerns          = "skin_concerns"
+        case sensitivityLevel      = "sensitivity_level"
         case concernSeverity       = "concern_severity"
         case concernDuration       = "concern_duration"
-        case ageRange              = "age_range"
+        case skinTrend             = "skin_trend"
         case skincareRoutine       = "skincare_routine"
         case consistency
-        case lifestyleFactors      = "lifestyle_factors"
-        case sensitivityLevel      = "sensitivity_level"
+        case lifestyleTrigger      = "lifestyle_trigger"
+        case age
         case primaryGoal           = "primary_goal"
         case onboardingCompletedAt = "onboarding_completed_at"
     }
@@ -132,15 +134,16 @@ private struct OnboardingProfilePayload: Codable {
         self.userId                = profile.userId
         self.displayName           = profile.displayName
         self.gender                = profile.gender.rawValue
+        self.primaryConcern        = profile.primaryConcern.rawValue
         self.skinType              = profile.skinType.rawValue
-        self.skinConcerns          = profile.skinConcerns.map(\.rawValue)
+        self.sensitivityLevel      = profile.sensitivityLevel.rawValue
         self.concernSeverity       = profile.concernSeverity
         self.concernDuration       = profile.concernDuration.rawValue
-        self.ageRange              = profile.ageRange.rawValue
+        self.skinTrend             = profile.skinTrend.rawValue
         self.skincareRoutine       = profile.skincareRoutine.rawValue
         self.consistency           = profile.consistency.rawValue
-        self.lifestyleFactors      = profile.lifestyleFactors.map(\.rawValue)
-        self.sensitivityLevel      = profile.sensitivityLevel.rawValue
+        self.lifestyleTrigger      = profile.lifestyleTrigger.rawValue
+        self.age                   = profile.age
         self.primaryGoal           = profile.primaryGoal
         self.onboardingCompletedAt = profile.onboardingCompletedAt.map { fmt.string(from: $0) }
     }

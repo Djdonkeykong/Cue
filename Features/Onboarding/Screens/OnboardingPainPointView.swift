@@ -1,26 +1,26 @@
 import SwiftUI
 
 private struct PainPoint {
-    let icon: String
     let headline: String
     let body: String
 }
 
 private let painPoints: [PainPoint] = [
     .init(
-        icon: "doc.questionmark.fill",
         headline: "You've tried everything",
-        body: "Products, routines, advice from everywhere — but nothing gives lasting results. That's not your fault."
+        body: "New products, strict routines, advice from everywhere — still breaking out."
     ),
     .init(
-        icon: "magnifyingglass.circle.fill",
-        headline: "Your skin is unique",
-        body: "What works for others won't necessarily work for you. Your skin reacts to its own set of triggers."
+        headline: "It affects more than your skin",
+        body: "Acne changes how you show up — in photos, at work, in social situations."
     ),
     .init(
-        icon: "sparkles",
-        headline: "We find the patterns for you",
-        body: "Cue analyzes diet, stress, sleep, and products to find exactly what's affecting your skin."
+        headline: "There's always a root cause",
+        body: "Food, stress, sleep, and hidden ingredients in your products are usually the culprits."
+    ),
+    .init(
+        headline: "You can figure it out",
+        body: "Cue connects the dots between your lifestyle and your skin — so you finally know what to change."
     ),
 ]
 
@@ -28,16 +28,32 @@ struct OnboardingPainPointView: View {
     let onContinue: () -> Void
     @State private var currentIndex = 0
 
+    private enum Slot { case a, b }
+    @State private var slotA: Int = 0
+    @State private var slotB: Int = 0
+    @State private var slotAOffset: CGFloat = 0
+    @State private var slotBOffset: CGFloat = 1
+    @State private var slotAZIndex: Double = 1
+    @State private var slotBZIndex: Double = 0
+    @State private var activeSlot: Slot = .a
+
     var body: some View {
         VStack(spacing: 0) {
-            TabView(selection: $currentIndex) {
-                ForEach(painPoints.indices, id: \.self) { i in
-                    PainPointSlide(point: painPoints[i])
-                        .tag(i)
-                }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
+            // Content only — button and dots stay fixed below
+            GeometryReader { geo in
+                ZStack {
+                    PainPointSlide(point: painPoints[slotA])
+                        .offset(x: slotAOffset * geo.size.width)
+                        .zIndex(slotAZIndex)
 
+                    PainPointSlide(point: painPoints[slotB])
+                        .offset(x: slotBOffset * geo.size.width)
+                        .zIndex(slotBZIndex)
+                }
+                .clipped()
+            }
+
+            // Fixed chrome — never participates in slot transitions
             VStack(spacing: 20) {
                 HStack(spacing: 8) {
                     ForEach(painPoints.indices, id: \.self) { i in
@@ -48,21 +64,54 @@ struct OnboardingPainPointView: View {
                     }
                 }
 
-                Button(currentIndex < painPoints.count - 1 ? "Next" : "Continue") {
+                PrimaryButton(currentIndex < painPoints.count - 1 ? "Next" : "Take the quiz") {
                     if currentIndex < painPoints.count - 1 {
-                        withAnimation { currentIndex += 1 }
+                        advance()
                     } else {
                         onContinue()
                     }
                 }
-                .font(.skin(.body, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(SkinTheme.accent, in: Capsule())
-                .padding(.horizontal, 24)
             }
             .padding(.bottom, 52)
+            .padding(.top, 20)
+        }
+        .background(SkinTheme.background.ignoresSafeArea())
+    }
+
+    private func advance() {
+        let next = currentIndex + 1
+        let outgoing: Slot = activeSlot
+        let incoming: Slot = activeSlot == .a ? .b : .a
+
+        var snap = Transaction()
+        snap.disablesAnimations = true
+        withTransaction(snap) {
+            switch incoming {
+            case .a:
+                slotA = next
+                slotAOffset = 1
+                slotAZIndex = 1
+                slotBZIndex = 0
+            case .b:
+                slotB = next
+                slotBOffset = 1
+                slotBZIndex = 1
+                slotAZIndex = 0
+            }
+        }
+
+        activeSlot = incoming
+        currentIndex = next
+
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.96)) {
+            switch outgoing {
+            case .a:
+                slotAOffset = -1
+                slotBOffset = 0
+            case .b:
+                slotBOffset = -1
+                slotAOffset = 0
+            }
         }
     }
 }
@@ -71,31 +120,19 @@ private struct PainPointSlide: View {
     let point: PainPoint
 
     var body: some View {
-        VStack(spacing: 28) {
+        VStack(spacing: 12) {
             Spacer()
-
-            ZStack {
-                Circle()
-                    .fill(SkinTheme.accentSoft)
-                    .frame(width: 114, height: 114)
-                Image(systemName: point.icon)
-                    .font(.system(size: 48))
-                    .foregroundStyle(SkinTheme.accent)
-            }
-
-            VStack(spacing: 12) {
-                Text(point.headline)
-                    .font(.skin(.title2, weight: .bold))
-                    .foregroundStyle(SkinTheme.primaryText)
-                    .multilineTextAlignment(.center)
-                Text(point.body)
-                    .font(.skin(.body))
-                    .foregroundStyle(SkinTheme.secondaryText)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 36)
-            }
-
+            Text(point.headline)
+                .font(.cue(.heading2))
+                .foregroundStyle(SkinTheme.primaryText)
+                .multilineTextAlignment(.center)
+            Text(point.body)
+                .font(.skin(.body))
+                .foregroundStyle(SkinTheme.secondaryText)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 36)
             Spacer()
         }
+        .padding(.horizontal, 24)
     }
 }

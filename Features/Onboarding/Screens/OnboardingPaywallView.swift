@@ -12,6 +12,7 @@ struct OnboardingPaywallView: View {
     @State private var errorMessage: String?
 
     var body: some View {
+        ZStack(alignment: .topTrailing) {
         ScrollView {
             VStack(spacing: 24) {
                 header
@@ -42,13 +43,20 @@ struct OnboardingPaywallView: View {
             }
         }
         .task { await loadOfferings() }
+
+            Button("Skip") { onComplete() }
+                .font(.skin(.footnote))
+                .foregroundStyle(SkinTheme.tertiaryText)
+                .padding(.top, 16)
+                .padding(.trailing, 24)
+        }
     }
 
     @ViewBuilder
     private var header: some View {
         VStack(spacing: 8) {
             Text("Unlock Cue Pro")
-                .font(.skin(.title2, weight: .bold))
+                .font(.cue(.heading2))
                 .foregroundStyle(SkinTheme.primaryText)
             Text("Get access to all results and personalized tools")
                 .font(.skin(.callout))
@@ -74,6 +82,7 @@ struct OnboardingPaywallView: View {
     private var actionButtons: some View {
         VStack(spacing: 12) {
             Button {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 purchase()
             } label: {
                 Group {
@@ -96,11 +105,19 @@ struct OnboardingPaywallView: View {
             .disabled(selectedPackage == nil || isPurchasing)
             .padding(.horizontal, 24)
 
-            Button("Continue for free", action: onComplete)
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                onComplete()
+            } label: {
+                Text("Continue for free")
+            }
                 .font(.skin(.callout))
                 .foregroundStyle(SkinTheme.secondaryText)
 
-            Button("Restore purchases") { restore() }
+            Button("Restore purchases") {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                restore()
+            }
                 .font(.skin(.footnote))
                 .foregroundStyle(SkinTheme.tertiaryText)
                 .disabled(isRestoring)
@@ -251,10 +268,10 @@ private struct PaywallPackageCard: View {
             .padding(16)
             .background(
                 isSelected ? SkinTheme.accent : SkinTheme.surface,
-                in: RoundedRectangle(cornerRadius: 14)
+                in: RoundedRectangle(cornerRadius: 18, style: .continuous)
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(
                         isSelected ? Color.clear : (isBestValue ? SkinTheme.accent.opacity(0.4) : SkinTheme.accent.opacity(0.15)),
                         lineWidth: isBestValue && !isSelected ? 1.5 : 1

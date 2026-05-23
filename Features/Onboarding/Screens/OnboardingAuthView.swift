@@ -5,6 +5,7 @@ import SwiftUI
 struct OnboardingAuthView: View {
     @EnvironmentObject private var authManager: AuthManager
     var onBack: (() -> Void)? = nil
+    var onSkip: (() -> Void)? = nil
 
     @State private var showEmailSignUp = false
     @State private var errorMessage: String? = nil
@@ -67,14 +68,20 @@ struct OnboardingAuthView: View {
             .ignoresSafeArea(edges: .top)
             .allowsHitTesting(false)
 
-            if let onBack {
-                HStack {
+            HStack {
+                if let onBack {
                     BackButton(action: onBack)
-                    Spacer()
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
+                Spacer()
+                if let onSkip {
+                    Button("Skip") { onSkip() }
+                        .font(.skin(.footnote))
+                        .foregroundStyle(SkinTheme.tertiaryText)
+                        .padding(.trailing, 24)
+                }
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 8)
         }
         .background(SkinTheme.background.ignoresSafeArea())
         .sheet(isPresented: $showEmailSignUp) {
@@ -168,6 +175,7 @@ struct OnboardingAuthView: View {
 
     private var emailButton: some View {
         Button {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             showEmailSignUp = true
         } label: {
             HStack(spacing: 10) {

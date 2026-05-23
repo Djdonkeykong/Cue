@@ -65,7 +65,10 @@ struct EmailAuthView: View {
 
             Spacer()
 
-            Button { dismiss() } label: {
+            Button {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    dismiss()
+                } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(SkinTheme.secondaryText)
@@ -127,6 +130,7 @@ struct EmailAuthView: View {
 
     private var sendButton: some View {
         Button {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             sendCode()
         } label: {
             ZStack {
@@ -170,6 +174,7 @@ struct EmailAuthView: View {
                     .foregroundStyle(SkinTheme.secondaryText)
                 Button(resendCooldown > 0 ? "Resend in \(resendCooldown)s" : "Resend") {
                     guard resendCooldown == 0 else { return }
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     sendCode(isResend: true)
                 }
                 .foregroundStyle(resendCooldown > 0 ? SkinTheme.secondaryText : SkinTheme.primaryDeep)
@@ -180,6 +185,7 @@ struct EmailAuthView: View {
             .padding(.top, 8)
 
             Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 withAnimation(.easeInOut(duration: 0.28)) { step = .email }
                 otpCode = ""
                 errorMessage = nil
@@ -196,6 +202,7 @@ struct EmailAuthView: View {
 
     private var verifyButton: some View {
         Button {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             verify()
         } label: {
             ZStack {

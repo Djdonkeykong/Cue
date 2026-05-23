@@ -154,6 +154,7 @@ struct OnboardingSignInView: View {
 
     private var emailButton: some View {
         Button {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             showEmailSignIn = true
         } label: {
             Text("Continue with Email")
@@ -200,17 +201,3 @@ struct OnboardingSignInView: View {
     }
 }
 
-// MARK: - Shared back button (used in both auth screens)
-
-struct BackButton: View {
-    let action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(SkinTheme.primaryText)
-                .frame(width: 38, height: 38)
-                .background(SkinTheme.surface, in: Circle())
-        }
-    }
-}
