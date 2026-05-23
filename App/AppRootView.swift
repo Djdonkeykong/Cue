@@ -20,5 +20,6 @@ struct AppRootView: View {
         .environmentObject(store)
         .environmentObject(authManager)
         .tint(SkinTheme.accent)
+        .background(SkinTheme.background.ignoresSafeArea())
     }
 }

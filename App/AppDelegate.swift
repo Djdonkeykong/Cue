@@ -11,6 +11,12 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
+        DispatchQueue.main.async {
+            application.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .forEach { $0.backgroundColor = SkinTheme.backgroundUIColor }
+        }
         return true
     }
 
