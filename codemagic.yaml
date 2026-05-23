@@ -29,19 +29,26 @@ workflows:
         script: |
           python3 - <<'PYEOF'
           import struct, zlib, os
-          def make_png(w, h, r, g, b):
+          def make_gradient_png(w, h, top, bot):
               def chunk(tag, data):
                   crc = zlib.crc32(tag + data) & 0xffffffff
                   return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', crc)
               ihdr = struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0)
-              raw = b''.join(b'\x00' + bytes([r, g, b] * w) for _ in range(h))
+              rows = []
+              for y in range(h):
+                  t = y / (h - 1)
+                  r = int(top[0] + (bot[0] - top[0]) * t)
+                  g = int(top[1] + (bot[1] - top[1]) * t)
+                  b = int(top[2] + (bot[2] - top[2]) * t)
+                  rows.append(b'\x00' + bytes([r, g, b] * w))
+              raw = b''.join(rows)
               return (b'\x89PNG\r\n\x1a\n'
                       + chunk(b'IHDR', ihdr)
                       + chunk(b'IDAT', zlib.compress(raw))
                       + chunk(b'IEND', b''))
           os.makedirs('Assets.xcassets/AppIcon.appiconset', exist_ok=True)
           with open('Assets.xcassets/AppIcon.appiconset/AppIcon.png', 'wb') as f:
-              f.write(make_png(1024, 1024, 196, 132, 90))
+              f.write(make_gradient_png(1024, 1024, (253, 235, 245), (238, 184, 216)))
           print('Icon generated')
           PYEOF
 
