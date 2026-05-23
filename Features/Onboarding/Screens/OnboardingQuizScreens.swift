@@ -250,8 +250,6 @@ struct QuizSensitivityView: View {
 struct QuizSeveritySliderView: View {
     @Bindable var vm: OnboardingViewModel
     let onContinue: () -> Void
-    @State private var hasInteracted = false
-
     private let levels: [(label: String, detail: String)] = [
         ("Mild",        "Rarely a breakout"),
         ("Light",       "Occasional blemishes"),
@@ -263,7 +261,7 @@ struct QuizSeveritySliderView: View {
     private var current: (label: String, detail: String) { levels[vm.severity - 1] }
 
     var body: some View {
-        QuizScreen(title: "How severe is the problem?", subtitle: "Drag to describe your typical skin day.", continueEnabled: hasInteracted, onContinue: onContinue) {
+        QuizScreen(title: "How severe is the problem?", subtitle: "Drag to describe your typical skin day.", onContinue: onContinue) {
             VStack(spacing: 24) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(current.label)
@@ -286,10 +284,7 @@ struct QuizSeveritySliderView: View {
                     Slider(
                         value: Binding(
                             get: { Double(vm.severity) },
-                            set: {
-                                vm.severity = Int($0.rounded())
-                                hasInteracted = true
-                            }
+                            set: { vm.severity = Int($0.rounded()) }
                         ),
                         in: 1...5,
                         step: 1
