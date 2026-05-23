@@ -12,7 +12,7 @@ struct OnboardingPaywallView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack(alignment: .top) {
         ScrollView {
             VStack(spacing: 24) {
                 header
@@ -70,11 +70,16 @@ struct OnboardingPaywallView: View {
             .allowsHitTesting(false)
         }
 
-            Button("Skip") { onComplete() }
-                .font(.skin(.footnote))
-                .foregroundStyle(SkinTheme.tertiaryText)
-                .padding(.top, 16)
-                .padding(.trailing, 24)
+            HStack {
+                Spacer()
+                Button("Skip") { onComplete() }
+                    .font(.skin(.footnote))
+                    .foregroundStyle(SkinTheme.tertiaryText)
+                    .padding(12)
+                    .contentShape(Rectangle())
+                    .padding(.trailing, 12)
+            }
+            .padding(.top, 8)
         }
     }
 

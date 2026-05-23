@@ -1,7 +1,6 @@
 import AuthenticationServices
 import SwiftUI
 
-// Sign-up screen shown at the end of the onboarding flow (new users).
 struct OnboardingAuthView: View {
     @EnvironmentObject private var authManager: AuthManager
     var onBack: (() -> Void)? = nil
@@ -14,59 +13,42 @@ struct OnboardingAuthView: View {
     private enum AuthProvider { case apple, google, email }
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 0) {
-                    // Illustration placeholder
-                    Color.clear
-                        .frame(height: 260)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 36)
-                        .padding(.bottom, 12)
+        ZStack(alignment: .top) {
+            SkinTheme.background.ignoresSafeArea()
 
+            VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Save your progress")
                         .font(.cue(.heading1))
                         .foregroundStyle(SkinTheme.primaryText)
-                        .padding(.bottom, 10)
 
                     Text("Create an account to sync your data across devices and never lose your progress.")
                         .font(.skin(.body))
                         .foregroundStyle(SkinTheme.secondaryText)
                         .lineSpacing(3)
-                        .padding(.bottom, 8)
 
                     if let error = errorMessage {
                         Text(error)
                             .font(.skin(.caption))
                             .foregroundStyle(SkinTheme.dangerColor)
-                            .padding(.top, 6)
+                            .padding(.top, 4)
                     }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 24)
+                .padding(.top, 28)
 
-                    authButtons
-                        .padding(.top, 32)
+                Spacer()
+
+                VStack(spacing: 12) {
+                    appleButton
+                    googleButton
+                    divider
+                    emailButton
                 }
                 .padding(.horizontal, 24)
+                .padding(.bottom, 40)
             }
-            .contentMargins(.top, 16, for: .scrollContent)
-            .contentMargins(.bottom, 80, for: .scrollContent)
-            .scrollBounceBehavior(.always)
-            .scrollIndicators(.hidden)
-            .toolbar(.hidden, for: .navigationBar)
-
-            // Fade the top edge into the background
-            LinearGradient(
-                stops: [
-                    .init(color: SkinTheme.background, location: 0),
-                    .init(color: SkinTheme.background, location: 0.30),
-                    .init(color: SkinTheme.background.opacity(0), location: 1)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .frame(height: 120)
-            .frame(maxWidth: .infinity)
-            .ignoresSafeArea(edges: .top)
-            .allowsHitTesting(false)
 
             HStack {
                 if let onBack {
@@ -77,13 +59,15 @@ struct OnboardingAuthView: View {
                     Button("Skip") { onSkip() }
                         .font(.skin(.footnote))
                         .foregroundStyle(SkinTheme.tertiaryText)
-                        .padding(.trailing, 24)
+                        .padding(12)
+                        .contentShape(Rectangle())
+                        .padding(.trailing, 12)
                 }
             }
             .padding(.horizontal, 20)
             .padding(.top, 8)
         }
-        .background(SkinTheme.background.ignoresSafeArea())
+        .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showEmailSignUp) {
             EmailAuthView(isSignIn: false)
                 .environmentObject(authManager)
@@ -94,15 +78,6 @@ struct OnboardingAuthView: View {
     }
 
     // MARK: - Buttons
-
-    private var authButtons: some View {
-        VStack(spacing: 12) {
-            appleButton
-            googleButton
-            divider
-            emailButton
-        }
-    }
 
     private var isAnyLoading: Bool { loadingProvider != nil }
 
@@ -144,14 +119,13 @@ struct OnboardingAuthView: View {
                     ProgressView().tint(.black)
                 } else {
                     HStack(spacing: 10) {
-                        // Replace with Image("GoogleGLogo") once asset is added
                         Image(systemName: "globe")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                         Text("Continue with Google")
                             .font(.skin(.body, weight: .semibold))
-                            .foregroundStyle(Color.black)
+                            .foregroundStyle(SkinTheme.black)
                     }
                 }
             }
@@ -229,4 +203,3 @@ struct OnboardingAuthView: View {
         }
     }
 }
-
