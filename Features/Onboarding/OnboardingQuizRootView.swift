@@ -21,7 +21,7 @@ struct OnboardingQuizRootView: View {
                 quizContent
                     .id(step)
                     .transition(.opacity)
-                    .animation(.easeInOut(duration: 0.15), value: step)
+                    .animation(.easeInOut(duration: 0.07), value: step)
             }
 
             if step > 0 {
@@ -57,11 +57,11 @@ struct OnboardingQuizRootView: View {
             onComplete()
             return
         }
-        withAnimation(.easeInOut(duration: 0.15)) { step += 1 }
+        withAnimation(.easeInOut(duration: 0.07)) { step += 1 }
     }
 
     private func goBack() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        withAnimation(.easeInOut(duration: 0.15)) { step -= 1 }
+        withAnimation(.easeInOut(duration: 0.07)) { step -= 1 }
     }
 }
