@@ -46,7 +46,9 @@ workflows:
           PYEOF
 
       - name: Generate Xcode project
-        script: xcodegen generate --spec project.yml
+        script: |
+          sed -i "s/CURRENT_PROJECT_VERSION: \"[0-9]*\"/CURRENT_PROJECT_VERSION: \"$BUILD_NUMBER\"/" project.yml
+          xcodegen generate --spec project.yml
 
       - name: Set up keychain
         script: keychain initialize
