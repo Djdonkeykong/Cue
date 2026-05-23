@@ -8,9 +8,8 @@ struct WelcomeView: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color(red: 0.992, green: 0.922, blue: 0.961),
-                    Color(red: 0.969, green: 0.784, blue: 0.898),
-                    Color(red: 0.933, green: 0.722, blue: 0.847)
+                    Color(red: 0.996, green: 0.961, blue: 0.980),
+                    Color(red: 0.973, green: 0.894, blue: 0.949)
                 ],
                 startPoint: .top,
                 endPoint: .bottom

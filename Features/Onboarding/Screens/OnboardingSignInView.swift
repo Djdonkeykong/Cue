@@ -80,7 +80,17 @@ struct OnboardingSignInView: View {
                 .padding(.top, 8)
             }
         }
-        .background(SkinTheme.background.ignoresSafeArea())
+        .background(
+            LinearGradient(
+                colors: [
+                    Color(red: 0.996, green: 0.961, blue: 0.980),
+                    Color(red: 0.973, green: 0.894, blue: 0.949)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+        )
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showEmailSignIn) {
             EmailAuthView(isSignIn: true)
