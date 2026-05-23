@@ -143,24 +143,17 @@ enum CueTextStyle {
 extension Font {
     static func cue(_ style: CueTextStyle) -> Font {
         switch style {
-        case .display:    return barlow("RobotoCondensed-Bold", size: 52)
-        case .heading1:   return barlow("RobotoCondensed-Bold", size: 38)
-        case .heading2:   return barlow("RobotoCondensed-Bold", size: 28)
-        case .heading3:   return barlow("RobotoCondensed-Bold", size: 22)
-        case .bodyLarge:  return .system(size: 18, weight: .regular)
-        case .body:       return .system(size: 16, weight: .regular)
-        case .bodyBold:   return .system(size: 16, weight: .semibold)
-        case .callout:    return .system(size: 15, weight: .regular)
-        case .caption:    return .system(size: 13, weight: .regular)
+        case .display:     return .system(size: 52, weight: .bold, design: .default)
+        case .heading1:    return .system(size: 38, weight: .bold, design: .default)
+        case .heading2:    return .system(size: 28, weight: .bold, design: .default)
+        case .heading3:    return .system(size: 22, weight: .bold, design: .default)
+        case .bodyLarge:   return .system(size: 18, weight: .regular)
+        case .body:        return .system(size: 16, weight: .regular)
+        case .bodyBold:    return .system(size: 16, weight: .semibold)
+        case .callout:     return .system(size: 15, weight: .regular)
+        case .caption:     return .system(size: 13, weight: .regular)
         case .captionBold: return .system(size: 13, weight: .medium)
-        case .label:      return .system(size: 11, weight: .medium)
+        case .label:       return .system(size: 11, weight: .medium)
         }
-    }
-
-    private static func barlow(_ name: String, size: CGFloat) -> Font {
-        if let uiFont = UIFont(name: name, size: size) {
-            return Font(uiFont)
-        }
-        return .system(size: size, weight: .black, design: .default)
     }
 }

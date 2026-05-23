@@ -28,51 +28,28 @@ struct QuizScreen<Content: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack(alignment: .top) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(title)
-                                .font(.cue(.heading2))
-                                .foregroundStyle(SkinTheme.primaryText)
-                            if let subtitle {
-                                Text(subtitle)
-                                    .font(.skin(.callout))
-                                    .foregroundStyle(SkinTheme.secondaryText)
-                            }
-                        }
-                        content()
-                    }
-                    .padding(24)
-                    .padding(.bottom, 8)
-                }
-                .contentMargins(.top, 72, for: .scrollContent)
-                .contentMargins(.bottom, 160, for: .scrollContent)
-                .scrollIndicators(.hidden)
-                .overlay(alignment: .top) {
-                    LinearGradient(
-                        stops: [
-                            .init(color: SkinTheme.background, location: 0),
-                            .init(color: SkinTheme.background, location: 0.50),
-                            .init(color: SkinTheme.background.opacity(0), location: 1)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 100)
-                    .allowsHitTesting(false)
-                }
-                .overlay(alignment: .bottom) {
-                    LinearGradient(
-                        colors: [SkinTheme.background.opacity(0), SkinTheme.background],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 60)
-                    .ignoresSafeArea(edges: .bottom)
-                    .allowsHitTesting(false)
+            VStack(alignment: .leading, spacing: 10) {
+                Text(title)
+                    .font(.cue(.heading1))
+                    .foregroundStyle(SkinTheme.primaryText)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.skin(.callout))
+                        .foregroundStyle(SkinTheme.secondaryText)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 24)
+            .padding(.top, 28)
+
+            Spacer()
+
+            VStack(spacing: 10) {
+                content()
+            }
+            .padding(.horizontal, 24)
+
+            Spacer()
 
             if showContinueButton {
                 PrimaryButton("Continue", isEnabled: continueEnabled, action: onContinue)
