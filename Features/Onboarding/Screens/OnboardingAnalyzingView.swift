@@ -25,7 +25,7 @@ struct OnboardingAnalyzingView: View {
                         )
                         .frame(width: 200, height: 200)
                         .rotationEffect(.degrees(-90))
-                        .animation(.easeInOut(duration: 0.45), value: progress)
+                        .animation(.easeInOut(duration: 3.0), value: progress)
 
                     Text("\(Int(progress * 100))%")
                         .font(.skin(.title, weight: .bold))
@@ -50,19 +50,8 @@ struct OnboardingAnalyzingView: View {
     }
 
     private func runAnalysis() async {
-        let steps: [(TimeInterval, Double)] = [
-            (0.30, 0.18),
-            (0.55, 0.36),
-            (0.55, 0.54),
-            (0.55, 0.72),
-            (0.55, 0.90),
-            (0.50, 1.00),
-        ]
-        for (delay, prog) in steps {
-            try? await Task.sleep(for: .seconds(delay))
-            withAnimation { progress = prog }
-        }
-        try? await Task.sleep(for: .seconds(1.00))
+        withAnimation(.easeInOut(duration: 3.0)) { progress = 1.0 }
+        try? await Task.sleep(for: .seconds(4.0))
         onComplete()
     }
 }

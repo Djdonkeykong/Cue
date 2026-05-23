@@ -44,7 +44,7 @@ struct OnboardingSocialProofView: View {
         }
         .task {
             requestReview()
-            try? await Task.sleep(for: .seconds(3))
+            try? await Task.sleep(for: .seconds(2))
             withAnimation { canContinue = true }
         }
     }

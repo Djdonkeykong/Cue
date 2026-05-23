@@ -557,10 +557,15 @@ struct QuizNameView: View {
 
                 Spacer()
 
-                PrimaryButton("Continue", isEnabled: !vm.displayName.isEmpty, action: onContinue)
-                    .padding(.bottom, 36)
+                PrimaryButton("Continue", isEnabled: !vm.displayName.isEmpty) {
+                    focused = false
+                    onContinue()
+                }
+                .padding(.bottom, 36)
             }
         }
-        .onAppear { focused = true }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { focused = true }
+        }
     }
 }

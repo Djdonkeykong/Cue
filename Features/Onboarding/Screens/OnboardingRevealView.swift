@@ -15,7 +15,7 @@ struct OnboardingRevealView: View {
             VStack(spacing: 0) {
                 Spacer()
 
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(spacing: 10) {
                     Text("Based on your answers,")
                         .font(.skin(.callout))
                         .foregroundStyle(SkinTheme.secondaryText)
@@ -23,8 +23,10 @@ struct OnboardingRevealView: View {
                     Text(displayedText)
                         .font(.cue(.heading1))
                         .foregroundStyle(SkinTheme.primaryText)
+                        .multilineTextAlignment(.center)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.horizontal, 24)
 
                 Spacer()
