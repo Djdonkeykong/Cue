@@ -25,24 +25,45 @@ workflows:
         script: |
           echo "$GOOGLE_SERVICE_INFO_PLIST" | base64 --decode > App/GoogleService-Info.plist
 
-      - name: Generate placeholder app icon
+      - name: Generate app icon
         script: |
+          pip3 install Pillow --quiet
           python3 - <<'PYEOF'
-          import struct, zlib, os
-          def make_png(w, h, r, g, b):
-              def chunk(tag, data):
-                  crc = zlib.crc32(tag + data) & 0xffffffff
-                  return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', crc)
-              ihdr = struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0)
-              raw = b''.join(b'\x00' + bytes([r, g, b] * w) for _ in range(h))
-              return (b'\x89PNG\r\n\x1a\n'
-                      + chunk(b'IHDR', ihdr)
-                      + chunk(b'IDAT', zlib.compress(raw))
-                      + chunk(b'IEND', b''))
+          from PIL import Image
+          import os
+
+          size = 1024
+          bg = Image.new('RGBA', (size, size), (245, 207, 223, 255))
+
+          logo_path = 'Resources/cue-logo.png'
+          if os.path.exists(logo_path):
+              logo = Image.open(logo_path).convert('RGBA')
+
+              # Make white/near-white pixels transparent
+              data = logo.getdata()
+              new_data = []
+              for r, g, b, a in data:
+                  if r > 200 and g > 200 and b > 200:
+                      new_data.append((r, g, b, 0))
+                  else:
+                      new_data.append((r, g, b, a))
+              logo.putdata(new_data)
+
+              # Scale to 55% of icon width, centered
+              target_w = int(size * 0.55)
+              ratio = target_w / logo.width
+              target_h = int(logo.height * ratio)
+              logo = logo.resize((target_w, target_h), Image.LANCZOS)
+
+              x = (size - target_w) // 2
+              y = (size - target_h) // 2
+              bg.paste(logo, (x, y), logo)
+              print('Icon generated with logo')
+          else:
+              print('Logo not found, using flat color fallback')
+
           os.makedirs('Assets.xcassets/AppIcon.appiconset', exist_ok=True)
-          with open('Assets.xcassets/AppIcon.appiconset/AppIcon.png', 'wb') as f:
-              f.write(make_png(1024, 1024, 245, 207, 223))
-          print('Icon generated')
+          bg.convert('RGB').save('Assets.xcassets/AppIcon.appiconset/AppIcon.png')
           PYEOF
 
       - name: Generate Xcode project
